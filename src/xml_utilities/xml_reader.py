@@ -1,6 +1,6 @@
 import re
 
-'''
+#
 class Node:
     def __init__(self,data,parent):
         self.data = data
@@ -44,14 +44,14 @@ class Node:
 #     for child in root.get_children():
 #         return get_node_bydata(child,data)
 
-def get_children(root:Node,list=[],i=0):
-    if(i == len(root.get_children())):
-        return list
-    list.append(root.get_child(i).data)
-    i+=1
-    return get_children(root,list,i)
+# def get_children(root:Node,list=[],i=0):
+#     if(i == len(root.get_children())):
+#         return list
+#     list.append(root.get_child(i).data)
+#     i+=1
+#     return get_children(root,list,i)
         
-
+#
 
 users = Node("users",None)
 user = Node("user",users)
@@ -74,23 +74,25 @@ id.add_parent(follower)
 # # print(get_node_bydata(users,"id"))
 # # print(id_node.get_parent().data)
 
-'''
-
 # l = get_children(follower)
 # # print(get_node_bydata(users,"id").get_parent())
 # print((name.get_siblings())[0][0].data)
 # # print(user.children[0].data)
 # # print(users.get_children()[0].data)
 
-
-
-
-
 def get_parent(data):
     for tag in xml_structure.keys():
         if(data in xml_structure.get(tag)):
             return tag
 
+# def get_children(tag,children):
+#     if(xml_structure.get(tag) == []):
+#         return
+#     for child in xml_structure.get(tag):
+#         children.append(child)
+#         get_children(child)
+#     return children
+    
 
 file = open("sample.xml")
 file = file.read()
@@ -116,17 +118,22 @@ xml_structure = {
     "topic":[]
 }
 
-# print(get_parent("id"))
 
-def get_children(tag,children=[]):
+
+print(get_parent("id"))
+
+def get_children(tag,children:list):
     if(tag == ""):
         return
     for child in xml_structure.get(tag):
         children.append(child)
-        get_children(child)
+        get_children(child,children)
     return children
     
-# print("children_function",get_children("post"))
+# l = []
+# get_children("post",l)
+# print(l)
+
 
 stack = []
 parent = ""
@@ -147,7 +154,19 @@ for n in range(len(lines)):
         print("line:",line)
     ln+=1
     if(line[0] == "<" and line[1] != "/" and line[-1] == ">"):
-        # If tag name isn't expected 
+        # If tag name isn't expected
+        l = []
+        get_children(parent,l)
+        print(parent != "" and (line[1:-1] in l) and line[1:-1] not in xml_structure.get(parent))
+        if(parent != ""):
+            print(parent,l)
+        print("s",(parent != "" and (line[1:-1] in l)))
+        if(parent != "" and line[1:-1] in l and line[1:-1] not in xml_structure.get(parent)):
+            to_be_inserted = get_parent(line[1:-1])
+            lines.insert(ln-1,"<"+to_be_inserted+">")
+            stack.append(to_be_inserted)
+            parent = to_be_inserted
+            continue
         if(parent != "" and get_parent(line[1:-1]) == get_parent(parent)):
             lines.insert(ln-1,"</"+stack.pop()+">")
             parent = stack[-1]
@@ -157,7 +176,6 @@ for n in range(len(lines)):
             stack.pop()
             parent = stack[-1]
             continue
-        
         if(parent in xml_structure.keys() and line[1:-1] not in xml_structure.get(parent)):
             if(len(xml_structure.get(parent)) == 0):
                 lines.insert(ln-1,"</"+parent+">")
