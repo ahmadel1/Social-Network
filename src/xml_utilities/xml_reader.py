@@ -145,8 +145,7 @@ skip = 0
 last = ""
 s = 0
 
-for n in range(len(lines)):
-    line = lines[n]
+for line in lines:
     if(len(parent) and len(stack)):
         print("stack:",stack[-1])
         # print("fix:",fix[-1])
@@ -207,7 +206,8 @@ for n in range(len(lines)):
         if(line[2:-1] == stack[-1]):
             stack.pop()
         elif(line[2:-1] not in stack):
-            line = line.replace(line," ")
+            print(line,"not in stack")
+            lines[ln-1] = lines[ln-1].replace(str(line)," ")
         else:
             lines.insert(ln-1,"</"+stack.pop()+">")
     if(len(stack)):
@@ -221,7 +221,7 @@ for n in range(len(lines)):
 
 
 
-
+lines = list(filter(lambda x:x != " ",lines))
 print(lines)
 
 new = open("output.xml","w")
