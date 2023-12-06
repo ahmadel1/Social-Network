@@ -1,32 +1,37 @@
-import xml.etree.ElementTree as ET
 import json
 from xmlTree import *
 
 
 def xml_to_json(root_element):
     result = {}
-    for child in root_element:
+    for child in root_element.children:
         child_data = None
         # child_data can be a dictionary or a string
-        if len(child) > 0:
+        if len(child.children) > 0:
+            # in case the child has children, call the function recursively
             child_data = xml_to_json(child)
         else:
-            child_data = child.text.replace("\n", "").replace("\t", "").strip()
+            child_data = child.text
 
         if child.tag in result:
             if isinstance(result[child.tag], list):
+                # if the child tag already exists in the result dictionary, append the child data to the list if it exists
                 result[child.tag].append(child_data)
             else:
+                # if it not a list, convert it to a list and append the child data
                 result[child.tag] = [result[child.tag], child_data]
         else:
+            # if the child is a leaf node, add it to the result dictionary directly
             result[child.tag] = child_data
 
     return result
 
 
 def create_json_string(xml_string):
-    root_element = ET.fromstring(xml_string)
-    json_dict = xml_to_json(root_element)
+    # create a tree from the xml string
+    xml_tree = create_tree(xml_string)
+    # convert the tree to a dictionary
+    json_dict = xml_to_json(xml_tree.root)
     return json.dumps(json_dict, indent=2)
 
 
@@ -41,7 +46,8 @@ def get_xml_string(file_path):
     with open(file_path, "r") as xml_file:
         xml_string = xml_file.read()
     xml_file.close()
-    return xml_string
+    # remove all the new lines, tabs and spaces from the xml string
+    return xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
 
 
 def create_tree(xml_string):
@@ -73,7 +79,7 @@ def create_tree(xml_string):
             current_node.tag = tag_buffer
             ###push the current node to the stack
             stack.append(current_node)
-
+        # check if the current character is a closing tag
         elif xml_string[i] == "<" and xml_string[i + 1] == "/":
             # save the value of the current node
             current_node.text = value_buffer
@@ -97,7 +103,6 @@ def create_tree(xml_string):
             value_buffer = value_buffer + xml_string[i]
 
         i = i + 1
-    xml_tree.root = xml_tree.root.children[0]
     return xml_tree
 
 
@@ -105,12 +110,6 @@ def create_tree(xml_string):
 
 xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
 
-# json_string = create_json_string(xml_string)
+json_string = create_json_string(xml_string)
 
-# create_json_file("src/xml_utilities/Sample files", json_string)
-
-xml_string = xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
-
-xml_tree = create_tree(xml_string)
-
-print(xml_tree.root.children[0].children[2].children[0].children[1].children[1].text)
+create_json_file("src/xml_utilities/Sample files", json_string)
