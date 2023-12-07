@@ -161,7 +161,11 @@ for line in lines:
             print(parent,l)
         print("s",(parent != "" and (line[1:-1] in l)))
         if(parent != "" and line[1:-1] in l and line[1:-1] not in xml_structure.get(parent)):
-            to_be_inserted = get_parent(line[1:-1])
+            to_be_inserted = line[1:-1]
+            while(get_parent(to_be_inserted) != parent):
+                to_be_inserted = get_parent(to_be_inserted)
+            # to_be_inserted = get_parent(line[1:-1])
+            # lines.insert(ln-2," ")
             lines.insert(ln-1,"<"+to_be_inserted+">")
             stack.append(to_be_inserted)
             parent = to_be_inserted
@@ -188,8 +192,14 @@ for line in lines:
                 for child in xml_structure.get(parent):
                     print(child,end=" ")
                 print("\b]?")
+                print(" or close",parent,"Y")
                 chosen = input()
                 #Change tag:
+                if(chosen == "Y"):
+                    lines.insert(ln-1,"</"+stack.pop()+">")
+                    parent = stack[-1]
+                    print("_________")
+                    continue
                 if(len(xml_structure.get(parent)) > 0):
                     lines[ln-1] = lines[ln-1].replace(line[1:-1],chosen)
                     print("replaced",line[1:-1])
@@ -210,6 +220,7 @@ for line in lines:
             lines[ln-1] = lines[ln-1].replace(str(line)," ")
         else:
             lines.insert(ln-1,"</"+stack.pop()+">")
+            print("tstack",stack[-1])
     if(len(stack)):
         parent = stack[-1]
     else:
@@ -217,7 +228,88 @@ for line in lines:
     print("_____________")
     
     
+# stack = []
+# parent = ""
+# current_tag = ""
+# ln = 0
+# fix = []
+# fix_index = []
+# skip = 0
+# last = ""
+# s = 0
 
+
+# for line in lines:
+#     if(len(parent) and len(stack)):
+#         print("stack:",stack[-1])
+#         # print("fix:",fix[-1])
+#         print("parent:",parent)
+#         print("line:",line)
+#     ln+=1
+#     if(line[0] == "<" and line[1] != "/" and line[-1] == ">"):
+#         # If tag name isn't expected
+#         l = []
+#         get_children(parent,l)
+#         print(parent != "" and (line[1:-1] in l) and line[1:-1] not in xml_structure.get(parent))
+#         if(parent != ""):
+#             print(parent,l)
+#         print("s",(parent != "" and (line[1:-1] in l)))
+#         if(parent != "" and line[1:-1] in l and line[1:-1] not in xml_structure.get(parent)):
+#             to_be_inserted = get_parent(line[1:-1])
+#             # lines.insert(ln-2," ")
+#             lines.insert(ln-1,"<"+to_be_inserted+">")
+#             stack.append(to_be_inserted)
+#             parent = to_be_inserted
+#             continue
+#         if(parent != "" and get_parent(line[1:-1]) == get_parent(parent)):
+#             lines.insert(ln-1,"</"+stack.pop()+">")
+#             parent = stack[-1]
+#             continue
+#         if(line[1:-1] == parent):
+#             lines.insert(ln-1,"</"+parent+">")
+#             stack.pop()
+#             parent = stack[-1]
+#             continue
+#         if(parent in xml_structure.keys() and line[1:-1] not in xml_structure.get(parent)):
+#             if(len(xml_structure.get(parent)) == 0):
+#                 lines.insert(ln-1,"</"+parent+">")
+#                 stack.pop()
+#                 parent = stack[-1]
+#                 continue
+#             else:
+#                 print("tag " + line[1:-1] + " isn't a child of " + parent,end=" ")
+#                 print(",line:",ln)
+#                 print("Which one did you mean:[",end="")
+#                 for child in xml_structure.get(parent):
+#                     print(child,end=" ")
+#                 print("\b]?")
+#                 chosen = input()
+#                 #Change tag:
+#                 if(len(xml_structure.get(parent)) > 0):
+#                     lines[ln-1] = lines[ln-1].replace(line[1:-1],chosen)
+#                     print("replaced",line[1:-1])
+#                     stack.append(chosen)
+#                     # print("stack:",stack[-1])
+#                     last = "open"
+#                     parent = chosen
+#                     print("_____________")
+#                     continue
+#         stack.append(line[1:-1])
+#         parent = stack[-1]
+                
+#     elif(line[0:2] == "</" and line[-1] == ">"):
+#         if(line[2:-1] == stack[-1]):
+#             stack.pop()
+#         elif(line[2:-1] not in stack):
+#             print(line,"not in stack")
+#             lines[ln-1] = lines[ln-1].replace(str(line)," ")
+#         else:
+#             lines.insert(ln-1,"</"+stack.pop()+">")
+#     if(len(stack)):
+#         parent = stack[-1]
+#     else:
+#         parent = ""
+#     print("_____________")
 
 
 
