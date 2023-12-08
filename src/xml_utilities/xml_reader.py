@@ -1,320 +1,158 @@
+from collections import *
 import re
 
-#
-class Node:
-    def __init__(self,data,parent):
-        self.data = data
-        self.parent = parent
-        self.parents = [parent]
-        self.children = []
-        if(parent != None):
-            parent.add_child(self)
-    def add_parent(self,parent):
-        self.parents.append(parent)
-        parent.add_child(self)
-    def get_parent(self):
-        if(len(self.parents) == 1):
-            return self.parent
-        else:
-            return self.parents
-    def add_child(self,child):
-        self.children.append(child)
-    def add_children(self,children:list):
-        self.children = self.children + children
-    def get_child(self,index):
-        return self.children[index]
-    def get_children(self,i=0):
-        children_to_return = []
-        while(i < len(self.children)):
-            children_to_return.append(self.get_child(i))
-            i+=1
-        return children_to_return
-    def get_siblings(self):
-        parent = self.get_parent()
-        siblings = list()
-        if(type(self.get_parent()) == Node):
-            siblings.append(parent.get_children())
-        else:
-            pass
-        return siblings
-    
-# def get_node_bydata(root:Node,data):
-#     if(root.data == data):
-#         return root
-#     for child in root.get_children():
-#         return get_node_bydata(child,data)
 
-# def get_children(root:Node,list=[],i=0):
-#     if(i == len(root.get_children())):
-#         return list
-#     list.append(root.get_child(i).data)
-#     i+=1
-#     return get_children(root,list,i)
-        
-#
+def binary_search(num,list:list,s,e):
+    mid = int((s+e)/2)
+    if(list[mid] == num):
+        return mid
+    if(s >= e):
+        return mid-1
+    if(num <= list[mid]):
+        return binary_search(num,list,s,mid)
+    else:
+        return binary_search(num,list,mid+1,e) 
 
-users = Node("users",None)
-user = Node("user",users)
-id = Node("id",user)
-name = Node("name",user)
-posts = Node("posts",user)
-followers = Node("followers",user)
-post = Node("post",posts)
-body = Node("body",post)
-topics = Node("topics",post)
-topic = Node("topic",topics)
-follower = Node("follower",followers)
-id.add_parent(follower)
-
-# print(get_node_bydata(users,"followers").get_parent().data)
-# # print(id_.parent.data)
-# # print(type(users))
-# id_node = get_node_bydata(user,"id")
-# # print(id.get_parent())
-# # print(get_node_bydata(users,"id"))
-# # print(id_node.get_parent().data)
-
-# l = get_children(follower)
-# # print(get_node_bydata(users,"id").get_parent())
-# print((name.get_siblings())[0][0].data)
-# # print(user.children[0].data)
-# # print(users.get_children()[0].data)
-
-def get_parent(data):
-    for tag in xml_structure.keys():
-        if(data in xml_structure.get(tag)):
-            return tag
-
-# def get_children(tag,children):
-#     if(xml_structure.get(tag) == []):
-#         return
-#     for child in xml_structure.get(tag):
-#         children.append(child)
-#         get_children(child)
-#     return children
-    
 
 file = open("sample.xml")
 file = file.read()
+
+print("******")
+file2 = file
+file2 = file2.replace(" ","")
+print(file2)
+end_lines = [i for i in range(len(file2)) if file2[i] == "\n"]
+tags = re.findall("<[a-z]*>|</[a-z]*>",file2)
+# print(re.findall("<[a-z]*>|</[a-z]*>",file2))
+conflict_fixes = []
+
+# print(end_lines)
+
+for i in range(len(re.findall("<[a-z]*>|</[a-z]*>",file2))):
+    if(i == len(tags)-1):
+        continue
+    tag = tags[i]
+    next_tag = tags[i+1]
+    if(tag[0] == "<" and tag[1] != "/" and next_tag[0:2] == "</"):
+        if(tag[1:-1] == next_tag[2:-1]):
+            # print(tag,next_tag)
+            ind = file2.index(tag)
+            file2 = list(file2)
+            file2[ind] = "$"
+            file2 = "".join(file2)
+            # print(file2.index(tag))
+        else:
+            ind = file2.index(tag)
+            print("Conflict between tags at line:",binary_search(ind,end_lines,0,len(end_lines)-1)+2)
+            print(tag,next_tag)
+            choose = input("Choose One:")
+            conflict_fixes.append(choose)
+            # print(file2.index(tag))
+            # print(file2[file2.index(tag)])
+    else:
+        ind = file2.index(tag)
+        file2 = list(file2)
+        file2[ind] = "$"
+        file2 = "".join(file2)
+# print(re.findall("<"+"name"+">.*</"+"name"+">",file))
+# print(file.find("<body>"))
+# file_lines = file.split("\n")
+# file_lines = [line.strip() for line in file_lines]
+# print(file_lines)
+
+# print(file2)
+print("******")
+
+
 file = file.replace(">",">\n")
 file = file.replace("<","\n<")
      
 lines = re.split("\n",file)
 lines = [line.strip() for line in lines]
 lines = list(filter(lambda x:x != "",lines))
-# print(lines)
+print(lines)
 
-xml_structure = {
-    "users":["user"],
-    "user":["id","name","posts","followers"],
-    "posts":["post"],
-    "post":["body","topics"],
-    "topics":["topic"],
-    "followers":["follower"],
-    "follower":["id"],
-    "id":[],
-    "name":[],
-    "body":[],
-    "topic":[]
-}
-
-
-
-print(get_parent("id"))
-
-def get_children(tag,children:list):
-    if(tag == ""):
-        return
-    for child in xml_structure.get(tag):
-        children.append(child)
-        get_children(child,children)
-    return children
-    
-# l = []
-# get_children("post",l)
-# print(l)
-
-
+lines_copy = lines.copy()
+open_tags = list()
+closing_tags = list()
+lines_dict={}
+number_of_line = 0
 stack = []
-parent = ""
-current_tag = ""
-ln = 0
-fix = []
-fix_index = []
+req_tag = ""
+prev_line="<"
+last_tag = 0
+last_tag_type = ""
 skip = 0
-last = ""
-s = 0
+flag = 0
+x_line = 0
+num_inserts = 0
+d = 0
 
 for line in lines:
-    if(len(parent) and len(stack)):
-        print("stack:",stack[-1])
-        # print("fix:",fix[-1])
-        print("parent:",parent)
-        print("line:",line)
-    ln+=1
-    if(line[0] == "<" and line[1] != "/" and line[-1] == ">"):
-        # If tag name isn't expected
-        l = []
-        get_children(parent,l)
-        print(parent != "" and (line[1:-1] in l) and line[1:-1] not in xml_structure.get(parent))
-        if(parent != ""):
-            print(parent,l)
-        print("s",(parent != "" and (line[1:-1] in l)))
-        if(parent != "" and line[1:-1] in l and line[1:-1] not in xml_structure.get(parent)):
-            to_be_inserted = line[1:-1]
-            while(get_parent(to_be_inserted) != parent):
-                to_be_inserted = get_parent(to_be_inserted)
-            # to_be_inserted = get_parent(line[1:-1])
-            # lines.insert(ln-2," ")
-            lines.insert(ln-1,"<"+to_be_inserted+">")
-            stack.append(to_be_inserted)
-            parent = to_be_inserted
-            continue
-        if(parent != "" and get_parent(line[1:-1]) == get_parent(parent)):
-            lines.insert(ln-1,"</"+stack.pop()+">")
-            parent = stack[-1]
-            continue
-        if(line[1:-1] == parent):
-            lines.insert(ln-1,"</"+parent+">")
-            stack.pop()
-            parent = stack[-1]
-            continue
-        if(parent in xml_structure.keys() and line[1:-1] not in xml_structure.get(parent)):
-            if(len(xml_structure.get(parent)) == 0):
-                lines.insert(ln-1,"</"+parent+">")
-                stack.pop()
-                parent = stack[-1]
-                continue
-            else:
-                print("tag " + line[1:-1] + " isn't a child of " + parent,end=" ")
-                print(",line:",ln)
-                print("Which one did you mean:[",end="")
-                for child in xml_structure.get(parent):
-                    print(child,end=" ")
-                print("\b]?")
-                print(" or close",parent,"Y")
-                chosen = input()
-                #Change tag:
-                if(chosen == "Y"):
-                    lines.insert(ln-1,"</"+stack.pop()+">")
-                    parent = stack[-1]
-                    print("_________")
-                    continue
-                if(len(xml_structure.get(parent)) > 0):
-                    lines[ln-1] = lines[ln-1].replace(line[1:-1],chosen)
-                    print("replaced",line[1:-1])
-                    stack.append(chosen)
-                    # print("stack:",stack[-1])
-                    last = "open"
-                    parent = chosen
-                    print("_____________")
-                    continue
-        stack.append(line[1:-1])
-        parent = stack[-1]
-                
-    elif(line[0:2] == "</" and line[-1] == ">"):
-        if(line[2:-1] == stack[-1]):
-            stack.pop()
-        elif(line[2:-1] not in stack):
-            print(line,"not in stack")
-            lines[ln-1] = lines[ln-1].replace(str(line)," ")
-        else:
-            lines.insert(ln-1,"</"+stack.pop()+">")
-            print("tstack",stack[-1])
+    # print(">>>>>>>>>>",new_fll)
+    line = line.strip()
+    if(skip):
+        skip = 0
+        number_of_line+=1
+        last_tag = number_of_line
+        continue
+    # print(line)
+    number_of_line+=1
+    print("line:",number_of_line,line)
     if(len(stack)):
-        parent = stack[-1]
-    else:
-        parent = ""
-    print("_____________")
+        req_tag = stack[-1]
+    print("req tag:",req_tag)
+    if(line[0] == "<" and line[1] != "/" and line[-1] == ">"):
+        # if(number_of_line in new_fll):
+        #     x_line += 2
+        #     print("x_line:",x_line)
+        #     d = new_fll.pop(0)
+        #     new_fll = list(map(lambda i:i+2,new_fll))
+        
+        if(prev_line[0] != "<"):
+            lines.insert(number_of_line-1,"</"+stack.pop()+">")
+            # print(line)
+        else:
+            stack.append(line[1:-1])
+            open_tags.append(line[1:-1])
+            lines_dict[line[1:-1]] = number_of_line
+        last_tag = number_of_line
+        last_tag_type = "o"
+    elif(line[0] == "<" and line[1] == "/" and line[-1] == ">"):
+        if(line[2:-1] == req_tag):
+            stack.pop()
+        else:
+            if(line[2:-1] not in stack):
+                if(last_tag_type == "o"):
+                    chosen = conflict_fixes.pop(0)
+                    lines[last_tag-1] = "<"+chosen+">"
+                    lines[number_of_line-1] = "</"+chosen+">"
+                    # lines[last_tag-1] = "#"+lines[last_tag-1]
+                    # lines[number_of_line-1] = "#"+lines[number_of_line-1]
+                    stack.pop()
+                elif(last_tag_type == "c"):
+                    lines.insert(last_tag,"<"+line[2:-1]+">")
+                    skip = 1
+            else: 
+                lines.insert(number_of_line-1,"</"+stack.pop()+">")
+                # print("l",line)
+        closing_tags.append(line[2:-1]) 
+        last_tag = number_of_line
+        last_tag_type = "c"
+    prev_line = line
     
     
-# stack = []
-# parent = ""
-# current_tag = ""
-# ln = 0
-# fix = []
-# fix_index = []
-# skip = 0
-# last = ""
-# s = 0
 
+if(len(stack) and lines[-1] != stack[-1]):
+    l = len(stack)
+    for i in range(l):
+        lines.append("</"+stack.pop()+">")
+elif(len(stack) == 0):
+    print("All good")
 
-# for line in lines:
-#     if(len(parent) and len(stack)):
-#         print("stack:",stack[-1])
-#         # print("fix:",fix[-1])
-#         print("parent:",parent)
-#         print("line:",line)
-#     ln+=1
-#     if(line[0] == "<" and line[1] != "/" and line[-1] == ">"):
-#         # If tag name isn't expected
-#         l = []
-#         get_children(parent,l)
-#         print(parent != "" and (line[1:-1] in l) and line[1:-1] not in xml_structure.get(parent))
-#         if(parent != ""):
-#             print(parent,l)
-#         print("s",(parent != "" and (line[1:-1] in l)))
-#         if(parent != "" and line[1:-1] in l and line[1:-1] not in xml_structure.get(parent)):
-#             to_be_inserted = get_parent(line[1:-1])
-#             # lines.insert(ln-2," ")
-#             lines.insert(ln-1,"<"+to_be_inserted+">")
-#             stack.append(to_be_inserted)
-#             parent = to_be_inserted
-#             continue
-#         if(parent != "" and get_parent(line[1:-1]) == get_parent(parent)):
-#             lines.insert(ln-1,"</"+stack.pop()+">")
-#             parent = stack[-1]
-#             continue
-#         if(line[1:-1] == parent):
-#             lines.insert(ln-1,"</"+parent+">")
-#             stack.pop()
-#             parent = stack[-1]
-#             continue
-#         if(parent in xml_structure.keys() and line[1:-1] not in xml_structure.get(parent)):
-#             if(len(xml_structure.get(parent)) == 0):
-#                 lines.insert(ln-1,"</"+parent+">")
-#                 stack.pop()
-#                 parent = stack[-1]
-#                 continue
-#             else:
-#                 print("tag " + line[1:-1] + " isn't a child of " + parent,end=" ")
-#                 print(",line:",ln)
-#                 print("Which one did you mean:[",end="")
-#                 for child in xml_structure.get(parent):
-#                     print(child,end=" ")
-#                 print("\b]?")
-#                 chosen = input()
-#                 #Change tag:
-#                 if(len(xml_structure.get(parent)) > 0):
-#                     lines[ln-1] = lines[ln-1].replace(line[1:-1],chosen)
-#                     print("replaced",line[1:-1])
-#                     stack.append(chosen)
-#                     # print("stack:",stack[-1])
-#                     last = "open"
-#                     parent = chosen
-#                     print("_____________")
-#                     continue
-#         stack.append(line[1:-1])
-#         parent = stack[-1]
-                
-#     elif(line[0:2] == "</" and line[-1] == ">"):
-#         if(line[2:-1] == stack[-1]):
-#             stack.pop()
-#         elif(line[2:-1] not in stack):
-#             print(line,"not in stack")
-#             lines[ln-1] = lines[ln-1].replace(str(line)," ")
-#         else:
-#             lines.insert(ln-1,"</"+stack.pop()+">")
-#     if(len(stack)):
-#         parent = stack[-1]
-#     else:
-#         parent = ""
-#     print("_____________")
-
-
-
-lines = list(filter(lambda x:x != " ",lines))
 print(lines)
+print(len(lines))
+# print(unmatchingTags)
 
 new = open("output.xml","w")
 wstack = []
@@ -356,3 +194,58 @@ for i in range(len(lines)):
     #     ut1 = -1
     #     ut2 = -1
     new.write("\n")
+
+# print(lines)
+# print(lines_copy)
+
+##############################################
+
+# print(open_tags)
+# print(closing_tags)
+# print(len(closing_tags))
+
+# for tag in closing_tags:
+#     print(tag)
+#     open_tags.remove(tag)
+
+# print(open_tags)
+# print(closing_tags)
+
+# print(lines_dict)
+
+# for i in open_tags:
+#     print(i,lines_dict.get(i))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# stack = deque()
+# estack= deque()
+# # print(lines)
+
+# for line in lines:
+#     if(line[0] == "<" and line[1] != "/" and line[-1] == ">"):
+#         stack.append(line[1:-1])
+#     elif(line[0] == "<" and line[1] == "/" and line[-1] == ">" and
+#     len(list(stack)) and line[2:line.index(">")] == list(stack)[-1]):
+#         stack.pop() 
+
+#     print(stack)
+
+# print(stack)
+# print(list(stack)[-1])
+# print(line)
+# print(line[2:line.index(">")])
+# print(line[2:line.index(">")] == list(stack)[-1])
+# print(stack) 
