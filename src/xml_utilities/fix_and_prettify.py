@@ -150,4 +150,3 @@ def fix(input_path, output_path):
     beautify(input_path=None, output_path=output_path, lines = lines)
     return output_path
 
-

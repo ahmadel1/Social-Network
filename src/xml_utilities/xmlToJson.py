@@ -37,7 +37,6 @@ def create_json_string(xml_string):
 
 
 def create_json_file(file_path, data):
-    file_path = file_path + "/sample-json.json"
     with open(file_path, "w") as json_file:
         json_file.write(data)
     json_file.close()
@@ -126,12 +125,21 @@ def get_users_array(json_dict):
     return users_array
 
 
+def convert_xml_to_json(input_xml_path, output_json_path):
+    xml_string = get_xml_string(input_xml_path)
+    json_string = create_json_string(xml_string)
+    create_json_file(output_json_path, json_string)
+    return output_json_path
+
+
+
+
 ### test ###
 
-xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
-# create a tree from the xml string
-xml_tree = create_tree(xml_string)
-# convert the tree to a dictionary
-json_dict = xml_to_json(xml_tree.root)
-# create user array form  (JSON) object
-users = get_users_array(json_dict)
+# xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
+# # create a tree from the xml string
+# xml_tree = create_tree(xml_string)
+# # convert the tree to a dictionary
+# json_dict = xml_to_json(xml_tree.root)
+# # create user array form  (JSON) object
+# users = get_users_array(json_dict)
