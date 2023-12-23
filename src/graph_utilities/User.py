@@ -9,7 +9,8 @@ class User:
     following = None
 
     def __str__(self) -> str:
-        pass
+        return f"User {self.name} (ID: {self.id})"
+
 
     def __init__(self):
         self.posts = list()

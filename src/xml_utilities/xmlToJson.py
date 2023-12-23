@@ -133,7 +133,5 @@ xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
 xml_tree = create_tree(xml_string)
 # convert the tree to a dictionary
 json_dict = xml_to_json(xml_tree.root)
-
 # create user array form  (JSON) object
 users = get_users_array(json_dict)
-print(users[2].following)

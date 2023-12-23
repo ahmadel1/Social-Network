@@ -71,10 +71,10 @@ def check_for_errors(filename):
 
     return (errors)
 
-a = []
+# a = []
 
-for i in check_for_errors("sample.xml").items():
-    a.extend([tag + f" is not opened at line " + str(i[0]) if tag[1] == "/" else tag + f" is not closed at line " + str(i[0]) for tag in i[1]])
+# for i in check_for_errors("sample.xml").items():
+#     a.extend([tag + f" is not opened at line " + str(i[0]) if tag[1] == "/" else tag + f" is not closed at line " + str(i[0]) for tag in i[1]])
     
-for i in a:
-    print(i)
+# for i in a:
+#     print(i)

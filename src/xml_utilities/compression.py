@@ -11,6 +11,7 @@ input_file = f"{project_directory}/Sample files/sample.xml"
 output_file = f"{project_directory}/Sample files/sample-compressed.xml"
 decompressed_file = f"{project_directory}/Sample files/sample-decompressed.xml"
 
+
 def get_file_size(file_path):
     file_size_bytes = os.path.getsize(file_path)
     file_size_kb = file_size_bytes / 1024

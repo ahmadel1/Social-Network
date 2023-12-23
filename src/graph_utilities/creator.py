@@ -1,4 +1,4 @@
-from .user import *
+from .User import *
 from .post import *
 from abc import ABC, abstractmethod
 

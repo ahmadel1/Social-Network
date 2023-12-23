@@ -29,3 +29,4 @@ class XmlTree:
 
         for child in node.children:
             self.print_tree(child)
+
