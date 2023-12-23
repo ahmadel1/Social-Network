@@ -1,5 +1,5 @@
-from user import *
-from post import *
+from .user import *
+from .post import *
 from abc import ABC, abstractmethod
 
 

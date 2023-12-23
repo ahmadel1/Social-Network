@@ -1,8 +1,6 @@
 import json
-from xmlTree import *
-from user import *
-from post import *
-from creator import *
+from .xmlTree import *
+from ..graph_utilities.creator import *
 
 
 def xml_to_json(root_element):
@@ -123,20 +121,19 @@ def get_users_array(json_dict):
 
     # adjust (following) array for each user after creating all users
     for user in users_array:
-        user.set_following_array(users_array)
+        user.setFollowingArray(users_array)
 
     return users_array
 
 
 ### test ###
 
-# xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
-# # create a tree from the xml string
-# xml_tree = create_tree(xml_string)
-# # convert the tree to a dictionary
-# json_dict = xml_to_json(xml_tree.root)
+xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
+# create a tree from the xml string
+xml_tree = create_tree(xml_string)
+# convert the tree to a dictionary
+json_dict = xml_to_json(xml_tree.root)
 
-# # create user array form  (JSON) object
-# users = get_users_array(json_dict)
-
-# print(users[0].following)
+# create user array form  (JSON) object
+users = get_users_array(json_dict)
+print(users[2].following)
