@@ -150,6 +150,6 @@ def fix(input_path, output_path):
     beautify(input_path=None, output_path=output_path, lines = lines)
     return output_path
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     #fix('src/xml_utilities/Sample files/sample.xml', '') 
     #beautify('src/xml_utilities/Sample files/sample.xml', '')

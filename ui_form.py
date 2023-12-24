@@ -15,32 +15,47 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QMainWindow, QMenuBar,
-    QPlainTextEdit, QPushButton, QSizePolicy, QSpacerItem,
-    QStatusBar, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLayout, QMainWindow,
+    QMenuBar, QPlainTextEdit, QPushButton, QSizePolicy,
+    QSpacerItem, QStatusBar, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(1344, 907)
+        sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
+        MainWindow.setSizePolicy(sizePolicy)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
+        sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
+        self.centralwidget.setSizePolicy(sizePolicy)
         self.verticalLayoutWidget = QWidget(self.centralwidget)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 801, 551))
+        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 1321, 871))
         self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_2 = QHBoxLayout()
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.plainTextEdit = QPlainTextEdit(self.verticalLayoutWidget)
         self.plainTextEdit.setObjectName(u"plainTextEdit")
+        sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        sizePolicy1.setHorizontalStretch(1)
+        sizePolicy1.setVerticalStretch(1)
+        sizePolicy1.setHeightForWidth(self.plainTextEdit.sizePolicy().hasHeightForWidth())
+        self.plainTextEdit.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_2.addWidget(self.plainTextEdit)
 
         self.plainTextEdit_2 = QPlainTextEdit(self.verticalLayoutWidget)
         self.plainTextEdit_2.setObjectName(u"plainTextEdit_2")
+        sizePolicy1.setHeightForWidth(self.plainTextEdit_2.sizePolicy().hasHeightForWidth())
+        self.plainTextEdit_2.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_2.addWidget(self.plainTextEdit_2)
 
@@ -55,11 +70,6 @@ class Ui_MainWindow(object):
 
         self.importButton = QPushButton(self.verticalLayoutWidget)
         self.importButton.setObjectName(u"importButton")
-        sizePolicy = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(7)
-        sizePolicy.setHeightForWidth(self.importButton.sizePolicy().hasHeightForWidth())
-        self.importButton.setSizePolicy(sizePolicy)
 
         self.horizontalLayout.addWidget(self.importButton)
 
@@ -69,11 +79,6 @@ class Ui_MainWindow(object):
 
         self.beautify = QPushButton(self.verticalLayoutWidget)
         self.beautify.setObjectName(u"beautify")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.beautify.sizePolicy().hasHeightForWidth())
-        self.beautify.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout.addWidget(self.beautify)
 
@@ -99,13 +104,51 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addItem(self.horizontalSpacer_5)
 
+        self.compress = QPushButton(self.verticalLayoutWidget)
+        self.compress.setObjectName(u"compress")
+
+        self.horizontalLayout.addWidget(self.compress)
+
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_2)
+
+        self.decompress = QPushButton(self.verticalLayoutWidget)
+        self.decompress.setObjectName(u"decompress")
+
+        self.horizontalLayout.addWidget(self.decompress)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_6)
+
+        self.minify = QPushButton(self.verticalLayoutWidget)
+        self.minify.setObjectName(u"minify")
+
+        self.horizontalLayout.addWidget(self.minify)
+
+        self.horizontalSpacer_8 = QSpacerItem(40, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_8)
+
+        self.check = QPushButton(self.verticalLayoutWidget)
+        self.check.setObjectName(u"check")
+
+        self.horizontalLayout.addWidget(self.check)
+
+        self.horizontalSpacer_9 = QSpacerItem(40, 20, QSizePolicy.Minimum, QSizePolicy.Minimum)
+
+        self.horizontalLayout.addItem(self.horizontalSpacer_9)
+
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
+        self.verticalLayout.setStretch(0, 100)
+        self.verticalLayout.setStretch(1, 100)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 800, 23))
+        self.menubar.setGeometry(QRect(0, 0, 1344, 23))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -122,5 +165,9 @@ class Ui_MainWindow(object):
         self.beautify.setText(QCoreApplication.translate("MainWindow", u"  beautify", None))
         self.json.setText(QCoreApplication.translate("MainWindow", u"  json", None))
         self.fix.setText(QCoreApplication.translate("MainWindow", u"  fix", None))
+        self.compress.setText(QCoreApplication.translate("MainWindow", u"compress", None))
+        self.decompress.setText(QCoreApplication.translate("MainWindow", u"decompress", None))
+        self.minify.setText(QCoreApplication.translate("MainWindow", u"minify", None))
+        self.check.setText(QCoreApplication.translate("MainWindow", u"check", None))
     # retranslateUi
 

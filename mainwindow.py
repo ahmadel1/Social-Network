@@ -5,12 +5,18 @@ from PySide6.QtGui import QIcon, QTextCursor, QTextCharFormat,QColor, QTextBlock
 from PySide6.QtCore import QSize
 from ui_form import Ui_MainWindow
 
-
+from src.xml_utilities import fix_and_prettify
 class MainWindow(QMainWindow):
+    file_path="import_path"
+    output_path = "/home/nassar/1.xml"
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        self.setMinimumSize(1400,900)
+
+
+        #self.resize(600,800)
 
         # Set the icon for the 'Import' button
         icon = QIcon("icons/icons8-import-50.png")
@@ -18,6 +24,22 @@ class MainWindow(QMainWindow):
         self.ui.importButton.setIcon(icon)
         self.ui.importButton.setIconSize(icon_size)
         self.ui.beautify.setIcon(QIcon("icons/icons8-makeup-brush-50.png"))
+        self.ui.compress.setIcon(icon)
+        self.ui.compress.setIconSize(icon_size)
+        self.ui.compress.setIcon(QIcon("icons/icons8-compress-64.png"))
+
+        self.ui.decompress.setIcon(icon)
+        self.ui.decompress.setIconSize(icon_size)
+        self.ui.decompress.setIcon(QIcon("icons/icons8-decompress-64.png"))
+
+        self.ui.check.setIcon(icon)
+        self.ui.check.setIconSize(icon_size)
+        self.ui.check.setIcon(QIcon("icons/icons8-check-64.png"))
+
+        self.ui.minify.setIcon(icon)
+        self.ui.minify.setIconSize(icon_size)
+        self.ui.minify.setIcon(QIcon("icons/icons8-minimize-arrow-symbol-with-shrink-inward-function-64.png"))
+
         self.ui.beautify.setIconSize(icon_size)
         self.ui.fix.setIcon(QIcon("icons/icons8-fix-48.png"))
         self.ui.fix.setIconSize(icon_size)
@@ -30,12 +52,37 @@ class MainWindow(QMainWindow):
         self.ui.fix.clicked.connect(self.on_fix_clicked)
         self.ui.json.clicked.connect(self.on_json_clicked)
 
+        self.ui.compress.clicked.connect(self.compress)
+        self.ui.decompress.clicked.connect(self.decompress)
+        self.ui.minify.clicked.connect(self.minify)
+        self.ui.check.clicked.connect(self.check)
+    def compress(self):
+        print("compress pressed")
+    def decompress(self):
+        print("decompress pressed")
+    def minify(self):
+        print("minify pressed")
+    def check(self):
+        print("on check pressed")
+
+    def open_python_file(self):
+             # Assume output_path is the path to the file
+             # Read the content of the Python file and display it in the QPlainTextEdit
+        try:
+            with open(self.output_path, 'r', encoding='utf-8') as file:
+                content = file.read()
+                self.ui.plainTextEdit_2.setPlainText(content)
+        except FileNotFoundError:
+                print(f"File not found: {self.output_path}")
+        except Exception as e:
+                print(f"Error reading file: {e}")
     def on_fix_clicked(self):
         self.ui.plainTextEdit.appendPlainText("fixed")
 
 
     def on_beautify_clicked(self):
-        self.ui.plainTextEdit.appendPlainText("beautify")
+        fix_and_prettify.beautify(self.file_path,self.output_path)
+        self.open_python_file()
 
     def on_json_clicked(self):
         self.ui.plainTextEdit.appendPlainText("json")
@@ -43,12 +90,12 @@ class MainWindow(QMainWindow):
 
     def on_importButton_clicked(self):
         file_dialog = QFileDialog(self)
-        file_path, _ = file_dialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.txt)")
+        self.file_path, _ = file_dialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.xml)")
 
-        if file_path:
-            print(f"Selected file: {file_path}")
+        if self.file_path:
+            print(f"Selected file: {self.file_path}")
 
-            with open(file_path, 'r') as file:
+            with open(self.file_path, 'r') as file:
                 file_content = file.read()
 
             self.ui.plainTextEdit.setPlainText(file_content)
