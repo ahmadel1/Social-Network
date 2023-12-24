@@ -1,3 +1,3 @@
 {
-    "files": ["form.ui","src/xml_utilities/xmlToJson.py","mainwindow.py","src/xml_utilities/fix_and_prettify.py"]
+    "files": ["src/xml_methods.py","src/xml_utilities/xmlToJson.py","mainwindow.py","form.ui","src/xml_utilities/xmlTree.py","src/xml_utilities/xmlToJson.py","src/xml_utilities/__init__.py","src/xml_utilities/fix_and_prettify.py","src/xml_utilities/compression.py","src/xml_utilities/check_tag_errors.py"]
 }

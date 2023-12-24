@@ -1,19 +1,31 @@
 # This Python file uses the following encoding: utf-8
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit
+
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit,QLineEdit
 from PySide6.QtGui import QIcon, QTextCursor, QTextCharFormat,QColor, QTextBlockFormat,QPalette
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QSize,QTimer
 from ui_form import Ui_MainWindow
 
-from src.xml_utilities import fix_and_prettify
+from src import xml_methods
+
+class OutputCapture:
+    def __init__(self, line_edit):
+        self.line_edit = line_edit
+
+    def write(self, text):
+        # Append new text and a newline character to the existing content
+        self.line_edit.setText(self.line_edit.text() + text + '\n')
 class MainWindow(QMainWindow):
     file_path="import_path"
-    output_path = "/home/nassar/1.xml"
+    output_path = ""
     def __init__(self, parent=None):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setMinimumSize(1400,900)
+
+        self.output_capture = OutputCapture(self.ui.lineEdit)
+        sys.stdout = self.output_capture
 
 
         #self.resize(600,800)
@@ -77,20 +89,31 @@ class MainWindow(QMainWindow):
         except Exception as e:
                 print(f"Error reading file: {e}")
     def on_fix_clicked(self):
-        self.ui.plainTextEdit.appendPlainText("fixed")
+        self.output_path=self.ui.lineEdit_2.text()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit.clear()
+        xml_methods.fix_xml(self.file_path,self.output_path)
+        self.open_python_file()
 
 
     def on_beautify_clicked(self):
-        fix_and_prettify.beautify(self.file_path,self.output_path)
+        self.output_path=self.ui.lineEdit_2.text()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit.clear()
+
+        xml_methods.beautify_xml(self.file_path,self.output_path)
         self.open_python_file()
 
     def on_json_clicked(self):
+        self.output_path=self.ui.lineEdit_2.text()
+        self.ui.lineEdit_2.clear()
         self.ui.plainTextEdit.appendPlainText("json")
 
 
     def on_importButton_clicked(self):
         file_dialog = QFileDialog(self)
         self.file_path, _ = file_dialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.xml)")
+        self.output_path=self.ui.lineEdit_2.text()
 
         if self.file_path:
             print(f"Selected file: {self.file_path}")
@@ -129,12 +152,16 @@ class MainWindow(QMainWindow):
                 self.ui.plainTextEdit.setExtraSelections([selection])
                 self.ui.plainTextEdit.setReadOnly(True)
 
-
-
+def read():
+    return widget.ui.lineEdit_2.text()
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     widget = MainWindow()
     widget.show()
+    #delay_function()
+    print("write output path")
+   # delay_function()
+    #widget.output_path=widget.ui.lineEdit_2.text()
     sys.exit(app.exec())

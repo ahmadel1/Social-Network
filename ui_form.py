@@ -15,9 +15,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLayout, QMainWindow,
-    QMenuBar, QPlainTextEdit, QPushButton, QSizePolicy,
-    QSpacerItem, QStatusBar, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QHBoxLayout, QLayout, QLineEdit,
+    QMainWindow, QMenuBar, QPlainTextEdit, QPushButton,
+    QSizePolicy, QSpacerItem, QStatusBar, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -45,7 +46,7 @@ class Ui_MainWindow(object):
         self.plainTextEdit = QPlainTextEdit(self.verticalLayoutWidget)
         self.plainTextEdit.setObjectName(u"plainTextEdit")
         self.plainTextEdit.setTabChangesFocus(False)
-        self.plainTextEdit.setTabStopDistance(120.000000000000000)
+        self.plainTextEdit.setTabStopDistance(40.000000000000000)
 
         self.horizontalLayout_2.addWidget(self.plainTextEdit)
 
@@ -63,6 +64,16 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setStretch(2, 1)
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
+
+        self.lineEdit = QLineEdit(self.verticalLayoutWidget)
+        self.lineEdit.setObjectName(u"lineEdit")
+
+        self.verticalLayout.addWidget(self.lineEdit)
+
+        self.lineEdit_2 = QLineEdit(self.verticalLayoutWidget)
+        self.lineEdit_2.setObjectName(u"lineEdit_2")
+
+        self.verticalLayout.addWidget(self.lineEdit_2)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
@@ -146,7 +157,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
 
         self.verticalLayout.setStretch(0, 1)
-        self.verticalLayout.setStretch(1, 1)
+        self.verticalLayout.setStretch(3, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")

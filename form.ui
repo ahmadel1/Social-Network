@@ -35,7 +35,7 @@
       <height>871</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,1">
+    <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,0,1">
      <property name="sizeConstraint">
       <enum>QLayout::SetDefaultConstraint</enum>
      </property>
@@ -47,7 +47,7 @@
           <bool>false</bool>
          </property>
          <property name="tabStopDistance">
-          <double>120.000000000000000</double>
+          <double>40.000000000000000</double>
          </property>
         </widget>
        </item>
@@ -72,6 +72,12 @@
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit"/>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="lineEdit_2"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
