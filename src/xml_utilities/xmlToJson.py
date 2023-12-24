@@ -1,10 +1,10 @@
-import json
 from .xmlTree import *
 from ..graph_utilities.creator import *
+from ..graph_utilities.dictionary import *
 
 
 def xml_to_json(root_element):
-    result = {}
+    result = Dictionary()
     for child in root_element.children:
         child_data = None
         # child_data can be a dictionary or a string
@@ -33,7 +33,7 @@ def create_json_string(xml_string):
     xml_tree = create_tree(xml_string)
     # convert the tree to a dictionary
     json_dict = xml_to_json(xml_tree.root)
-    return json.dumps(json_dict, indent=2)
+    return json_dict.convert_to_str()
 
 
 def create_json_file(file_path, data):
@@ -132,14 +132,14 @@ def convert_xml_to_json(input_xml_path, output_json_path):
     return output_json_path
 
 
-
-
 ### test ###
 
-# xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
-# # create a tree from the xml string
-# xml_tree = create_tree(xml_string)
-# # convert the tree to a dictionary
-# json_dict = xml_to_json(xml_tree.root)
-# # create user array form  (JSON) object
-# users = get_users_array(json_dict)
+xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
+# create a tree from the xml string
+xml_tree = create_tree(xml_string)
+# convert the tree to a dictionary
+json_dict = xml_to_json(xml_tree.root)
+# create user array form  (JSON) object
+users = get_users_array(json_dict)
+
+print(users[0].posts[1].topics)
