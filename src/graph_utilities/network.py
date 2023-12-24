@@ -10,9 +10,9 @@ json_dict = xml_to_json(xml_tree.root)
 users = get_users_array(json_dict)
 
 class SocialNetwork:
-    def __init__(self, network_size, users):
-        self.users = [None] * network_size
-        self.adjacency_list = [[] for _ in range(network_size)]
+    def __init__(self, users):
+        self.users = [None] * (len(users)+1)
+        self.adjacency_list = [[] for _ in range(len(users)+1)]
         for user in users:
             self.users[int(user.id)] = user
         self.create_adjacency_list()
@@ -77,7 +77,7 @@ class SocialNetwork:
 
 
 
-# network = SocialNetwork(10, users)
+# network = SocialNetwork( users)
 # print(network.get_mutuals(network.users[3], network.users[2]))
 # print(network.most_influencer())
 # print(network.most_active_user())

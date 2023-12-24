@@ -44,3 +44,5 @@ def check_xml(input_path, output_path):
 
 def minify_xml(input_path, output_path):
     pass
+
+
