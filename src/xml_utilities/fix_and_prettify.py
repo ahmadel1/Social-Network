@@ -1,6 +1,7 @@
 from collections import *
 import re
-
+from PySide6.QtCore import QTimer
+import mainwindow
 
 def binary_search(num,list:list,s,e):
     mid = int((s+e)/2)
@@ -63,7 +64,13 @@ def beautify(input_path, output_path, lines = None):
     output_file.close()
 
 
+def some_function_that_needs_delay(time):
+            # Start the timer with a delay of 2000 milliseconds (2 seconds)
+    QTimer.singleShot(time,delayed_code)
 
+def delayed_code():
+            # This function will be called after the specified delay
+    print("Delayed code executed")
 def get_conflicts(file):
     file_content = file.replace(" ","")
     end_lines = [i for i in range(len(file_content)) if file_content[i] == "\n"]
@@ -82,7 +89,10 @@ def get_conflicts(file):
                 ind = file_content.index(tag)
                 print("Conflict between tags at line:",binary_search(ind,end_lines,0,len(end_lines)-1)+2)
                 print(tag,next_tag)
-                choose = input("Choose One:")
+                print("Choose One:")
+                some_function_that_needs_delay(3000)
+                #choose = mainwindow.MainWindow..ui.lineEdit_2.text()
+                choose=tag
                 conflict_fixes.append(choose)
         else:
             ind = file_content.index(tag)
@@ -150,6 +160,9 @@ def fix(input_path, output_path):
     beautify(input_path=None, output_path=output_path, lines = lines)
     return output_path
 
+#<<<<<<< HEAD
 #if __name__ == "__main__":
     #fix('src/xml_utilities/Sample files/sample.xml', '') 
     #beautify('src/xml_utilities/Sample files/sample.xml', '')
+#=======
+#>>>>>>> origin/main
