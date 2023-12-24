@@ -69,7 +69,7 @@ class MainWindow(QMainWindow):
              # Assume output_path is the path to the file
              # Read the content of the Python file and display it in the QPlainTextEdit
         try:
-            with open(self.output_path, 'r', encoding='utf-8') as file:
+            with open(self.output_path, 'r+') as file:
                 content = file.read()
                 self.ui.plainTextEdit_2.setPlainText(content)
         except FileNotFoundError:
@@ -99,11 +99,9 @@ class MainWindow(QMainWindow):
                 file_content = file.read()
 
             self.ui.plainTextEdit.setPlainText(file_content)
-            self.ui.plainTextEdit.setReadOnly(True)
             self.focus_on_line(40)
 
     def focus_on_line(self, line_number):
-                self.ui.plainTextEdit.setReadOnly(False)
 
                 cursor = self.ui.plainTextEdit.textCursor()
                 cursor.movePosition(QTextCursor.Start)

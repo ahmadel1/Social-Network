@@ -44,21 +44,23 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.plainTextEdit = QPlainTextEdit(self.verticalLayoutWidget)
         self.plainTextEdit.setObjectName(u"plainTextEdit")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        sizePolicy1.setHorizontalStretch(1)
-        sizePolicy1.setVerticalStretch(1)
-        sizePolicy1.setHeightForWidth(self.plainTextEdit.sizePolicy().hasHeightForWidth())
-        self.plainTextEdit.setSizePolicy(sizePolicy1)
+        self.plainTextEdit.setTabChangesFocus(False)
+        self.plainTextEdit.setTabStopDistance(120.000000000000000)
 
         self.horizontalLayout_2.addWidget(self.plainTextEdit)
 
+        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.horizontalLayout_2.addItem(self.horizontalSpacer_10)
+
         self.plainTextEdit_2 = QPlainTextEdit(self.verticalLayoutWidget)
         self.plainTextEdit_2.setObjectName(u"plainTextEdit_2")
-        sizePolicy1.setHeightForWidth(self.plainTextEdit_2.sizePolicy().hasHeightForWidth())
-        self.plainTextEdit_2.setSizePolicy(sizePolicy1)
+        self.plainTextEdit_2.setTabStopDistance(40.000000000000000)
 
         self.horizontalLayout_2.addWidget(self.plainTextEdit_2)
 
+        self.horizontalLayout_2.setStretch(0, 1)
+        self.horizontalLayout_2.setStretch(2, 1)
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
@@ -143,8 +145,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
-        self.verticalLayout.setStretch(0, 100)
-        self.verticalLayout.setStretch(1, 100)
+        self.verticalLayout.setStretch(0, 1)
+        self.verticalLayout.setStretch(1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -166,7 +168,7 @@ class Ui_MainWindow(object):
         self.json.setText(QCoreApplication.translate("MainWindow", u"  json", None))
         self.fix.setText(QCoreApplication.translate("MainWindow", u"  fix", None))
         self.compress.setText(QCoreApplication.translate("MainWindow", u"compress", None))
-        self.decompress.setText(QCoreApplication.translate("MainWindow", u"decompress", None))
+        self.decompress.setText(QCoreApplication.translate("MainWindow", u"decmop    ", None))
         self.minify.setText(QCoreApplication.translate("MainWindow", u"minify", None))
         self.check.setText(QCoreApplication.translate("MainWindow", u"check", None))
     # retranslateUi

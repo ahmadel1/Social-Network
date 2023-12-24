@@ -47,7 +47,7 @@
           <bool>false</bool>
          </property>
          <property name="tabStopDistance">
-          <double>120.000000000000000</double>
+          <double>40.000000000000000</double>
          </property>
         </widget>
        </item>
