@@ -69,12 +69,28 @@ class MainWindow(QMainWindow):
         self.ui.minify.clicked.connect(self.minify)
         self.ui.check.clicked.connect(self.check)
     def compress(self):
+        self.output_path=self.ui.lineEdit_2.text()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit.clear()
+        xml_methods.compress(self.file_path,self.output_path)
         print("compress pressed")
     def decompress(self):
+        self.output_path=self.ui.lineEdit_2.text()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit.clear()
+        xml_methods.decompress(self.file_path,self.output_path)
         print("decompress pressed")
     def minify(self):
+        self.output_path=self.ui.lineEdit_2.text()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit.clear()
+        xml_methods.minify_xml(self.file_path,self.output_path)
         print("minify pressed")
     def check(self):
+        self.output_path=self.ui.lineEdit_2.text()
+        self.ui.lineEdit_2.clear()
+        self.ui.lineEdit.clear()
+        xml_methods.check_xml(self.file_path,self.output_path)
         print("on check pressed")
 
     def open_python_file(self):
@@ -107,7 +123,10 @@ class MainWindow(QMainWindow):
     def on_json_clicked(self):
         self.output_path=self.ui.lineEdit_2.text()
         self.ui.lineEdit_2.clear()
-        self.ui.plainTextEdit.appendPlainText("json")
+        xml_methods.xml_to_json(self.file_path,self.output_path)
+        self.open_python_file()
+
+
 
 
     def on_importButton_clicked(self):
