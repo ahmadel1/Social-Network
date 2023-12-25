@@ -2,6 +2,8 @@ from .xml_utilities.xmlToJson import *
 from .xml_utilities.fix_and_prettify import *
 from .xml_utilities.compression import *
 from .xml_utilities.check_tag_errors import *
+from .xml_utilities.minify import *
+
 
 
 def xml_to_json(input_path, output_path):
@@ -43,6 +45,5 @@ def check_xml(input_path, output_path):
     pass
 
 def minify_xml(input_path, output_path):
-    pass
-
+    minify(input_path, output_path)
 
