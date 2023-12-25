@@ -4,10 +4,7 @@ from ..xml_utilities.xmlToJson import *
 
 
 
-xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
-xml_tree = create_tree(xml_string)
-json_dict = xml_to_json(xml_tree.root)
-users = get_users_array(json_dict)
+
 
 class SocialNetwork:
     def __init__(self, users):
@@ -76,8 +73,10 @@ class SocialNetwork:
 
 
 
-
-# network = SocialNetwork( users)
+# input_xml_path = "src/xml_utilities/Sample files/sample.xml"
+# users = get_users_array_from_xml(input_xml_path)
+# network = SocialNetwork(users)
+# print(network.get_adjacency_list())
 # print(network.get_mutuals(network.users[3], network.users[2]))
 # print(network.most_influencer())
 # print(network.most_active_user())
