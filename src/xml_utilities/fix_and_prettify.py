@@ -156,3 +156,7 @@ def fix_and_prettify(filename,output_path):
         new.write("\n")
     
     return output_path
+
+
+
+fix_and_prettify("./Sample files/sample.xml","out.xml")

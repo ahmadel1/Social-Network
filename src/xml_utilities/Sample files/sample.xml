@@ -1,6 +1,5 @@
 <users>
-    <user>
-        <id>1</id>
+    <user>1</id>
         <name>Ahmed Ali</name>
         <posts>
             <post>
@@ -10,7 +9,7 @@
                 <topics>
                     <topic>
                         economy
-                    </topic>
+                    
                     <topic>
                         finance
                     </topic>

@@ -14,7 +14,7 @@ def binary_search(num,list:list,s,e):
         return binary_search(num,list,mid+1,e) 
 
 
-file = open("sample.xml")
+file = open("./Sample files/sample.xml")
 file = file.read()
 
 print("******")
