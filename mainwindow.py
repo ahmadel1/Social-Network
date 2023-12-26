@@ -5,13 +5,13 @@ from PySide6.QtCore import QSize
 from ui_form import Ui_MainWindow
 from src import xml_methods
 
-class OutputCapture:
-    def __init__(self, line_edit):
-        self.line_edit = line_edit
+#class OutputCapture:
+    #def __init__(self, line_edit):
+       # self.line_edit = line_edit
 
-    def write(self, text):
+   # def write(self, text):
         # Append new text and a newline character to the existing content
-        self.line_edit.setText(self.line_edit.text() + text + '\n')
+        #self.line_edit.setText(self.line_edit.text() + text + '\n')
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -24,8 +24,8 @@ class MainWindow(QMainWindow):
         self.setup_resizable_layout()
 
         # Set up output capture
-        self.output_capture = OutputCapture(self.ui.lineEdit)
-        sys.stdout = self.output_capture
+       # self.output_capture = OutputCapture(self.ui.lineEdit)
+        #sys.stdout = self.output_capture
 
         # Set up icons and connect buttons to methods
         self.setup_icons()
@@ -65,9 +65,6 @@ class MainWindow(QMainWindow):
 
         for button in buttons:
             h_layout.addWidget(button)
-
-        main_layout.addWidget(self.ui.lineEdit)
-        main_layout.addWidget(self.ui.lineEdit_2)
         main_layout.addLayout(h_layout)
 
     def setup_icons(self):
@@ -101,9 +98,8 @@ class MainWindow(QMainWindow):
         self.ui.check.clicked.connect(self.check)
 
         # Add a combo box to select the active text editor
-        self.editor_selection = QComboBox()
-        self.editor_selection.addItems(["plainTextEdit", "plainTextEdit_2"])
-        self.ui.horizontalLayout.addWidget(self.editor_selection)
+        self.editor_selection = "plainTextEdit"
+
 
     def save_text_in_file(self):
         # Get the text from the QPlainTextEdit
@@ -118,25 +114,16 @@ class MainWindow(QMainWindow):
                 file.write(text_to_save)
 
     def compress(self):
-        self.output_path = self.ui.lineEdit_2.text()
-        self.ui.lineEdit_2.clear()
-        self.ui.lineEdit.clear()
         xml_methods.compress(self.file_path, self.output_path)
         print("compress pressed")
 
     def decompress(self):
-        self.output_path = self.ui.lineEdit_2.text()
-        self.ui.lineEdit_2.clear()
-        self.ui.lineEdit.clear()
         xml_methods.decompress(self.file_path, self.output_path)
         print("decompress pressed")
 
     def on_minify_clicked(self):
         try:
             xml_content = self.ui.plainTextEdit.toPlainText()
-            self.output_path = self.ui.lineEdit_2.text()
-            self.ui.lineEdit_2.clear()
-            self.ui.lineEdit.clear()
             minified_content = xml_methods.minify_xml(xml_content)
             print(minified_content)
             self.ui.plainTextEdit_2.setPlainText(minified_content)
@@ -177,18 +164,12 @@ class MainWindow(QMainWindow):
             print(f"Error reading file: {e}")
 
     def on_fix_clicked(self):
-        self.output_path = self.ui.lineEdit_2.text()
-        self.ui.lineEdit_2.clear()
-        self.ui.lineEdit.clear()
         xml_methods.fix_xml(self.file_path, self.output_path)
         self.open_python_file()
 
     def on_beautify_clicked(self):
         try:
             xml_content = self.ui.plainTextEdit.toPlainText()
-            self.output_path = self.ui.lineEdit_2.text()
-            self.ui.lineEdit_2.clear()
-            self.ui.lineEdit.clear()
             beautified_content = xml_methods.beautify_xml(xml_content)
             print(beautified_content)
             self.ui.plainTextEdit_2.setPlainText(beautified_content)
@@ -199,8 +180,6 @@ class MainWindow(QMainWindow):
     def on_json_clicked(self):
         try:
             xml_content = self.ui.plainTextEdit.toPlainText()
-            self.output_path = self.ui.lineEdit_2.text()
-            self.ui.lineEdit_2.clear()
             json_content = xml_methods.xml_to_json(xml_content)
             print(json_content)
             self.ui.plainTextEdit_2.setPlainText(json_content)
@@ -211,17 +190,15 @@ class MainWindow(QMainWindow):
     def on_importButton_clicked(self):
         file_dialog = QFileDialog(self)
         self.file_path, _ = file_dialog.getOpenFileName(self, "Open File", "", "All Files (*);;Text Files (*.xml)")
-        self.output_path = self.ui.lineEdit_2.text()
-
         if self.file_path:
             print(f"Selected file: {self.file_path}")
 
             with open(self.file_path, 'r') as file:
                 file_content = file.read()
 
-            selected_editor = self.get_selected_editor()
+            selected_editor = self.editor_selection
             if selected_editor:
-                selected_editor.setPlainText(file_content)
+                self.ui.plainTextEdit.setPlainText(file_content)
                 self.focus_on_line(40)
 
     def focus_on_line(self, line_number):
