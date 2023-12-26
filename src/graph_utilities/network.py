@@ -1,6 +1,8 @@
 from .User import *
 from .post import *
 from ..xml_utilities.xmlToJson import *
+import networkx as nx
+import matplotlib.pyplot as plt
 
 
 class SocialNetwork:
