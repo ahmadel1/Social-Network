@@ -42,11 +42,7 @@ def create_json_file(file_path, data):
     json_file.close()
 
 
-def get_xml_string(file_path):
-    with open(file_path, "r") as xml_file:
-        xml_string = xml_file.read()
-    xml_file.close()
-    # remove all the new lines, tabs and spaces from the xml string
+def get_xml_string(xml_string):
     return xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
 
 
@@ -125,12 +121,10 @@ def get_users_array(json_dict):
     return users_array
 
 
-def convert_xml_to_json(input_xml_path, output_json_path):
-    xml_string = get_xml_string(input_xml_path)
+def convert_xml_to_json(xml_content):
+    xml_string = get_xml_string(xml_content)
     json_string = create_json_string(xml_string)
-    create_json_file(output_json_path, json_string)
-    return output_json_path
-
+    return json_string
 
 
 

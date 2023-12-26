@@ -1,7 +1,6 @@
 from collections import *
 import re
 from PySide6.QtCore import QTimer
-import mainwindow
 
 def binary_search(num,list:list,s,e):
     mid = int((s+e)/2)
@@ -33,44 +32,37 @@ def seperate(file):
         lines = list(filter(lambda x:x != "",lines))
         return lines
 
-def beautify(input_path, output_path, lines = None):
-    if input_path == None:
-        lines = lines
-    else: 
-        file = open_file(input_path)
-        lines = seperate(file)
-
-    output_file = open(output_path,"w")
+def beautify(xml_content):
+    lines = seperate(xml_content)
+    beautified_content = ""
     skip_loops, indentations = 0, ""
+    
     for i in range(len(lines)):
-        if(skip_loops != 0):
+        if skip_loops != 0:
             skip_loops -= 1
             continue
+        
         line = lines[i]
-        if(line[0] == "<" and line[1] != "/" and line[-1] == ">"):
-            if(len(lines[i+1]) <= 4 and lines[i+1][0] != "<"):
-                output_file.write("".join([indentations, lines[i], lines[i+1], lines[i+2]]))
-                skip_loops=2
+        
+        if line[0] == "<" and line[1] != "/" and line[-1] == ">":
+            if len(lines[i + 1]) <= 4 and lines[i + 1][0] != "<":
+                beautified_content += "".join([indentations, lines[i], lines[i + 1], lines[i + 2]])
+                skip_loops = 2
             else:
-                output_file.write("".join([indentations, line]))
-                indentations+='\t'
-        elif(line[0] == "<" and line[1] == "/" and line[-1] == ">"):
-            indentations = indentations.replace('\t',"",1)
-            output_file.write("".join([indentations, line]))
+                beautified_content += "".join([indentations, line])
+                indentations += '\t'
+        elif line[0] == "<" and line[1] == "/" and line[-1] == ">":
+            indentations = indentations.replace('\t', "", 1)
+            beautified_content += "".join([indentations, line])
         else:
-            output_file.write("".join([indentations, line]))
-        output_file.write("\n")
-               
-    output_file.close()
+            beautified_content += "".join([indentations, line])
+        
+        beautified_content += "\n"
+    
+    return beautified_content
 
 
-def some_function_that_needs_delay(time):
-            # Start the timer with a delay of 2000 milliseconds (2 seconds)
-    QTimer.singleShot(time,delayed_code)
 
-def delayed_code():
-            # This function will be called after the specified delay
-    print("Delayed code executed")
 def get_conflicts(file):
     file_content = file.replace(" ","")
     end_lines = [i for i in range(len(file_content)) if file_content[i] == "\n"]
@@ -90,7 +82,6 @@ def get_conflicts(file):
                 print("Conflict between tags at line:",binary_search(ind,end_lines,0,len(end_lines)-1)+2)
                 print(tag,next_tag)
                 print("Choose One:")
-                some_function_that_needs_delay(3000)
                 #choose = mainwindow.MainWindow..ui.lineEdit_2.text()
                 choose=tag
                 conflict_fixes.append(choose)
@@ -102,8 +93,8 @@ def get_conflicts(file):
     return conflict_fixes
     
 
-def fix(input_path, output_path):
-    file = open_file(input_path)
+def fix(xml_content):
+    file = xml_content
     conflict_fixes = get_conflicts(file) 
     lines = seperate(file)
 
@@ -157,8 +148,9 @@ def fix(input_path, output_path):
     elif(len(stack) == 0):
         print("All good")
 
-    beautify(input_path=None, output_path=output_path, lines = lines)
-    return output_path
+    
+
+    return beautify(xml_content)
 
 #<<<<<<< HEAD
 #if __name__ == "__main__":
