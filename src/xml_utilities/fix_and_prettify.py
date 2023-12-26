@@ -34,7 +34,7 @@ def seperate(file):
         return lines
 
 def beautify(xml_content):
-    lines = xml_content.split('\n')
+    lines = seperate(xml_content)
     beautified_content = ""
     skip_loops, indentations = 0, ""
     
@@ -61,6 +61,7 @@ def beautify(xml_content):
         beautified_content += "\n"
     
     return beautified_content
+
 
 
 def some_function_that_needs_delay(time):
