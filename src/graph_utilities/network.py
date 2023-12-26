@@ -3,9 +3,6 @@ from .post import *
 from ..xml_utilities.xmlToJson import *
 
 
-
-
-
 class SocialNetwork:
     def __init__(self, users):
         self.users = [None] * (len(users)+1)
@@ -73,10 +70,10 @@ class SocialNetwork:
 
 
 
-# input_xml_path = "src/xml_utilities/Sample files/sample.xml"
-# users = get_users_array_from_xml(input_xml_path)
-# network = SocialNetwork(users)
-# print(network.get_adjacency_list())
+input_xml_path = "src/xml_utilities/Sample files/sample.xml"
+users = get_users_array_from_path(input_xml_path)
+network = SocialNetwork(users)
+print(network.get_adjacency_list())
 # print(network.get_mutuals(network.users[3], network.users[2]))
 # print(network.most_influencer())
 # print(network.most_active_user())

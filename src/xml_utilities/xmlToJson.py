@@ -46,9 +46,7 @@ def prettify_json(json_str, indent=2):
 
 
 def create_json_string(xml_string):
-    # create a tree from the xml string
     xml_tree = create_tree(xml_string)
-    # convert the tree to a dictionary
     json_dict = xml_to_json(xml_tree.root)
 
     return prettify_json(json_dict.convert_to_str())
@@ -124,8 +122,15 @@ def get_users_array(json_dict):
     # array of (User) objects
     users_array = []
 
-    # array of (JSON) objects
-    json_users = json_dict["users"]["user"]
+    # Handle the case where "users" is a dictionary with a single "user" key
+    if "users" in json_dict and "user" in json_dict["users"]:
+        json_users = json_dict["users"]["user"]
+        if not isinstance(json_users, list):
+            # Convert to a list if there is only one user
+            json_users = [json_users]
+    else:
+        # Handle the case where "users" is a list of "user" dictionaries
+        json_users = json_dict.get("users", [])
 
     # iterate through json_users
     for json_user in json_users:
@@ -145,6 +150,11 @@ def convert_xml_to_json(xml_content):
     json_string = create_json_string(xml_string)
     return json_string
 
+def get_users_array_from_path(xml_path):
+    with open(xml_path, "r") as xml_file:
+        xml_string = xml_file.read()
+    json_dict = xml_to_json(create_tree(xml_string).root)
+    return get_users_array(json_dict)
 
 ## temp method modified later
 def get_xml_string_fromPath(file_path):
