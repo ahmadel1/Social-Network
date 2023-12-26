@@ -1,15 +1,12 @@
 import os
-
-MIN_WORD_SIZE = 5 #compress words larger than this word size
-MIN_WORD_FREQ = 2 # compress words repeater more than this
-TERMINAL = True # false to disable printing in termainal 
-
+import pickle
 
 project_directory = os.path.dirname(os.path.abspath(__file__))
-
 input_file = f"{project_directory}/Sample files/sample.xml"
-output_file = f"{project_directory}/Sample files/sample-compressed.xml"
-decompressed_file = f"{project_directory}/Sample files/sample-decompressed.xml"
+output_file = f"{project_directory}/Sample files/sample-compressed-lzw.pkl"
+decompressed_file = f"{project_directory}/Sample files/sample-decompressed-lzw.xml"
+
+TERMINAL = True  
 
 def get_file_size(file_path):
     file_size_bytes = os.path.getsize(file_path)
@@ -18,80 +15,67 @@ def get_file_size(file_path):
     if TERMINAL:
         print(f"File Size: {file_size_bytes} bytes ({file_size_kb:.2f} KB or {file_size_mb:.2f} MB)")
 
-
 def compress(input_file, output_file):
     with open(input_file, 'r') as f:
-        lines = f.readlines()
+        original_data = f.read()
 
-    word_frequency = {}
-    for line in lines:
-        words = line.strip().split(" ")
-        for word in set(words):
-            word_frequency[word] = word_frequency.get(word, 0) + 1
+    dictionary = {chr(i): i for i in range(256)}
+    current_code = 256
+    max_code_size = 12 
+    compressed_data = []
+    buffer = ""
 
+    for symbol in original_data:
+        buffer_symbol = buffer + symbol
+        if buffer_symbol in dictionary:
+            buffer = buffer_symbol
+        else:
+            compressed_data.append(dictionary[buffer])
+            if current_code < 2**max_code_size:
+                dictionary[buffer_symbol] = current_code
+                current_code += 1
+            buffer = symbol
 
-    word_symbol = {}
-    symbol = 0
-    for word, frequency in word_frequency.items():
-        if frequency >= MIN_WORD_FREQ and len(word) >= MIN_WORD_SIZE:
-            word_symbol[word] = f'#{symbol}!'
-            symbol += 1
+    compressed_data.append(dictionary[buffer])
 
-    file = ''.join(lines)
-    for word, symbol in word_symbol.items():
-        file = file.replace(word, symbol)
+    with open(output_file, 'wb') as f:
+        pickle.dump((compressed_data, max_code_size), f)
 
-    with open(output_file, 'w') as f:
-        f.write(file)
-        # Add mapping information to the end of the output file
-        f.write('\n<!START_DICTIONARY!>\n')
-        for word, symbol in word_symbol.items():
-            f.write(f"{word}\n")
-
-    if TERMINAL:
-        print("Input file Size:", get_file_size(input_file))
-        print("Output file Size:", get_file_size(output_file))
-
-
+    get_file_size(input_file)
+    get_file_size(output_file)
 
 def decompress(input_file, output_file):
-    with open(input_file, 'r') as f:
-        lines = f.readlines()
+    with open(input_file, 'rb') as f:
+        compressed_data, max_code_size = pickle.load(f)
 
-    start_dict_index = lines.index('<!START_DICTIONARY!>\n') + 1
-    compressed_lines = lines[:start_dict_index-1]
-    dictionary_lines = lines[start_dict_index:]
+    dictionary = {i: chr(i) for i in range(256)}
+    current_code = 256
+    buffer = chr(compressed_data[0])
+    decompressed_data = buffer
 
-    word_symbol = {}
-    for i, line in enumerate(dictionary_lines):
-        word_symbol[line.strip()] = f'#{i}!'
-    symbol_set = set(word_symbol.values())
+    for code in compressed_data[1:]:
+        if code in dictionary:
+            entry = dictionary[code]
+        elif code == current_code:
+            entry = buffer + buffer[0]
+        else:
+            entry = buffer + buffer[0]
+            if current_code < 2**max_code_size:
+                dictionary[current_code] = entry
+                current_code += 1
 
-    for i in range(len(compressed_lines)):
-        line = compressed_lines[i]
-        for word, symbol in word_symbol.items():
-            line = line.replace(symbol, word)
-        compressed_lines[i] = line
-
-
-    decompressed_content = ''.join(compressed_lines)
+        decompressed_data += entry
+        if current_code < 2**max_code_size:
+            dictionary[current_code] = buffer + entry[0]
+            current_code += 1
+        buffer = entry
 
     with open(output_file, 'w') as f:
-        f.write(decompressed_content)
+        f.write(decompressed_data)
 
-    if TERMINAL:
-        print("Input file Size:", get_file_size(input_file))
-        print("Output file Size:", get_file_size(output_file))
+    get_file_size(input_file)
+    get_file_size(output_file)
 
 if __name__ == "__main__":
     compress(input_file, output_file)
     decompress(output_file, decompressed_file)
-
-
-
-
-##  for minifying 
-# def compress_spaces(line):
-#     indent_count = len(line) - len(line.lstrip())
-#     return '\t' * (indent_count // 4) + line.lstrip()
-# lines = [compress_spaces(line) for line in lines]

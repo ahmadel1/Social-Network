@@ -1,9 +1,10 @@
-import json
-from xmlTree import *
+from .xmlTree import *
+from ..graph_utilities.creator import *
+from ..graph_utilities.dictionary import *
 
 
 def xml_to_json(root_element):
-    result = {}
+    result = Dictionary()
     for child in root_element.children:
         child_data = None
         # child_data can be a dictionary or a string
@@ -27,26 +28,39 @@ def xml_to_json(root_element):
     return result
 
 
+def prettify_json(json_str, indent=2):
+    result = ""
+    level = 0
+    for char in json_str:
+        if char == "{" or char == "[":
+            level += 1
+            result += char + "\n" + " " * (level * indent)
+        elif char == "}" or char == "]":
+            level -= 1
+            result += "\n" + " " * (level * indent) + char
+        elif char == ",":
+            result += char + "\n" + " " * (level * indent)
+        else:
+            result += char
+    return result
+
+
 def create_json_string(xml_string):
     # create a tree from the xml string
     xml_tree = create_tree(xml_string)
     # convert the tree to a dictionary
     json_dict = xml_to_json(xml_tree.root)
-    return json.dumps(json_dict, indent=2)
+
+    return prettify_json(json_dict.convert_to_str())
 
 
 def create_json_file(file_path, data):
-    file_path = file_path + "/sample-json.json"
     with open(file_path, "w") as json_file:
         json_file.write(data)
     json_file.close()
 
 
-def get_xml_string(file_path):
-    with open(file_path, "r") as xml_file:
-        xml_string = xml_file.read()
-    xml_file.close()
-    # remove all the new lines, tabs and spaces from the xml string
+def get_xml_string(xml_string):
     return xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
 
 
@@ -106,10 +120,48 @@ def create_tree(xml_string):
     return xml_tree
 
 
+def get_users_array(json_dict):
+    # array of (User) objects
+    users_array = []
+
+    # array of (JSON) objects
+    json_users = json_dict["users"]["user"]
+
+    # iterate through json_users
+    for json_user in json_users:
+        # create new user creator object to avoid mutation
+        user_creator = UserCreator(json_user)
+        users_array.append(user_creator.create_object())
+
+    # adjust (following) array for each user after creating all users
+    for user in users_array:
+        user.setFollowingArray(users_array)
+
+    return users_array
+
+
+def convert_xml_to_json(xml_content):
+    xml_string = get_xml_string(xml_content)
+    json_string = create_json_string(xml_string)
+    return json_string
+
+
+## temp method modified later
+def get_xml_string_fromPath(file_path):
+    with open(file_path, "r") as xml_file:
+        xml_string = xml_file.read()
+    xml_file.close()
+    # remove all the new lines, tabs and spaces from the xml string
+    return xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
+
+
 ### test ###
 
-xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
-
-json_string = create_json_string(xml_string)
-
-create_json_file("src/xml_utilities/Sample files", json_string)
+# xml_string = get_xml_string_fromPath("src/xml_utilities/Sample files/sample.xml")
+# # # create a tree from the xml string
+# # xml_tree = create_tree(xml_string)
+# # # convert the tree to a dictionary
+# # json_dict = xml_to_json(xml_tree.root)
+# # # create user array form  (JSON) object
+# # users = get_users_array(json_dict)
+# print(convert_xml_to_json(xml_string))
