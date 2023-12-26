@@ -1,7 +1,7 @@
 # This Python file uses the following encoding: utf-8
 import sys
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit,QLineEdit
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit,QLineEdit,QVBoxLayout,QHBoxLayout
 from PySide6.QtGui import QIcon, QTextCursor, QTextCharFormat,QColor, QTextBlockFormat,QPalette
 from PySide6.QtCore import QSize,QTimer
 from ui_form import Ui_MainWindow
@@ -22,7 +22,8 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        self.setMinimumSize(1400,900)
+        self.setMinimumSize(1000,700)
+        self.setup_resizable_layout()
 
         self.output_capture = OutputCapture(self.ui.lineEdit)
         sys.stdout = self.output_capture
@@ -81,7 +82,47 @@ class MainWindow(QMainWindow):
         self.ui.decompress.clicked.connect(self.decompress)
         self.ui.minify.clicked.connect(self.minify)
         self.ui.check.clicked.connect(self.check)
+    def setup_resizable_layout(self):
+            # Add a layout to the central widget for resizable behavior
+            central_widget = self.centralWidget()
+            main_layout = QVBoxLayout(central_widget)
+            main_layout.setContentsMargins(0, 0, 0, 0)  # Remove margins to allow resizing from all edges
 
+            # Create a vertical layout for plainTextEdit, plainTextEdit_2, and vertical layout with buttons
+            v_layout = QHBoxLayout()
+
+            v_layout.addWidget(self.ui.plainTextEdit)
+
+
+            # Create a vertical layout for undo, save, redo buttons
+            undo_save_redo_layout = QVBoxLayout()
+            undo_save_redo_layout.addWidget(self.ui.undo)
+            undo_save_redo_layout.addWidget(self.ui.save)
+            undo_save_redo_layout.addWidget(self.ui.redo)
+
+            # Add the vertical layout with undo, save, redo to the main vertical layout
+            v_layout.addLayout(undo_save_redo_layout)
+            v_layout.addWidget(self.ui.plainTextEdit_2)
+
+
+            # Add the vertical layout to the main layout
+            main_layout.addLayout(v_layout)
+
+            # Create a horizontal layout for the remaining buttons
+            h_layout = QHBoxLayout()
+
+            # Add the remaining buttons to the horizontal layout
+            h_layout.addWidget(self.ui.importButton)
+            h_layout.addWidget(self.ui.beautify)
+            h_layout.addWidget(self.ui.fix)
+            h_layout.addWidget(self.ui.json)
+            h_layout.addWidget(self.ui.compress)
+            h_layout.addWidget(self.ui.decompress)
+            h_layout.addWidget(self.ui.minify)
+            h_layout.addWidget(self.ui.check)
+            main_layout.addWidget(self.ui.lineEdit)
+            main_layout.addWidget(self.ui.lineEdit_2)
+            main_layout.addLayout(h_layout)
     def save_text_in_file(self):
                 # Get the text from the QPlainTextEdit
                 text_to_save = self.ui.plainTextEdit.toPlainText()
