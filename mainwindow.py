@@ -33,6 +33,7 @@ class MainWindow(QMainWindow):
         # Set the icon for the 'Import' button
         icon = QIcon("icons/icons8-import-50.png")
         icon_size = QSize(64, 64)
+        icon_size_small=QSize(54,54)
         self.ui.importButton.setIcon(icon)
         self.ui.importButton.setIconSize(icon_size)
         self.ui.beautify.setIcon(QIcon("icons/icons8-makeup-brush-50.png"))
@@ -58,16 +59,41 @@ class MainWindow(QMainWindow):
         self.ui.json.setIcon(QIcon("icons/icons8-json-48.png"))
         self.ui.json.setIconSize(icon_size)
 
+        self.ui.save.setIconSize(icon_size_small)
+        self.ui.save.setIcon(QIcon("icons/icons8-save-64.png"))
+
+        self.ui.undo.setIconSize(icon_size_small)
+        self.ui.undo.setIcon(QIcon("icons/icons8-undo-54.png"))
+
+        self.ui.redo.setIconSize(icon_size_small)
+        self.ui.redo.setIcon(QIcon("icons/icons8-redo-54.png"))
+
+
         # Connect the 'Import' button to the custom method
         self.ui.importButton.clicked.connect(self.on_importButton_clicked)
         self.ui.beautify.clicked.connect(self.on_beautify_clicked)
         self.ui.fix.clicked.connect(self.on_fix_clicked)
         self.ui.json.clicked.connect(self.on_json_clicked)
 
+        self.ui.save.clicked.connect(self.save)
+
         self.ui.compress.clicked.connect(self.compress)
         self.ui.decompress.clicked.connect(self.decompress)
         self.ui.minify.clicked.connect(self.minify)
         self.ui.check.clicked.connect(self.check)
+
+    def save_text_in_file(self):
+                # Get the text from the QPlainTextEdit
+                text_to_save = self.ui.plainTextEdit.toPlainText()
+
+                # Get the file path using QFileDialog
+                self.file_path, _ = QFileDialog.getSaveFileName(self, 'Save File', '', 'Text Files (*.xml);;All Files (*)')
+
+                if self.file_path:
+                    # Save the text to the file
+                    with open(self.file_path, 'w') as file:
+                        file.write(text_to_save)
+
     def compress(self):
         self.output_path=self.ui.lineEdit_2.text()
         self.ui.lineEdit_2.clear()
@@ -86,6 +112,10 @@ class MainWindow(QMainWindow):
         self.ui.lineEdit.clear()
         xml_methods.minify_xml(self.file_path,self.output_path)
         print("minify pressed")
+    def save(self):
+        self.save_text_in_file()
+
+        print("save pressed")
     def check(self):
         self.output_path=self.ui.lineEdit_2.text()
         self.ui.lineEdit_2.clear()

@@ -24,7 +24,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1344, 907)
+        MainWindow.resize(1348, 788)
         sizePolicy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setSizePolicy(sizePolicy)
         self.verticalLayoutWidget = QWidget(self.centralwidget)
         self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
-        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 1321, 871))
+        self.verticalLayoutWidget.setGeometry(QRect(80, 0, 1241, 521))
         self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
@@ -50,9 +50,41 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.plainTextEdit)
 
-        self.horizontalSpacer_10 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.verticalLayout_2 = QVBoxLayout()
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
-        self.horizontalLayout_2.addItem(self.horizontalSpacer_10)
+        self.verticalLayout_2.addItem(self.verticalSpacer_3)
+
+        self.undo = QPushButton(self.verticalLayoutWidget)
+        self.undo.setObjectName(u"undo")
+
+        self.verticalLayout_2.addWidget(self.undo)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_2)
+
+        self.save = QPushButton(self.verticalLayoutWidget)
+        self.save.setObjectName(u"save")
+
+        self.verticalLayout_2.addWidget(self.save)
+
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer)
+
+        self.redo = QPushButton(self.verticalLayoutWidget)
+        self.redo.setObjectName(u"redo")
+
+        self.verticalLayout_2.addWidget(self.redo)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Minimum, QSizePolicy.Expanding)
+
+        self.verticalLayout_2.addItem(self.verticalSpacer_4)
+
+
+        self.horizontalLayout_2.addLayout(self.verticalLayout_2)
 
         self.plainTextEdit_2 = QPlainTextEdit(self.verticalLayoutWidget)
         self.plainTextEdit_2.setObjectName(u"plainTextEdit_2")
@@ -60,8 +92,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.plainTextEdit_2)
 
-        self.horizontalLayout_2.setStretch(0, 1)
-        self.horizontalLayout_2.setStretch(2, 1)
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
@@ -156,12 +186,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
-        self.verticalLayout.setStretch(0, 1)
         self.verticalLayout.setStretch(3, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1344, 23))
+        self.menubar.setGeometry(QRect(0, 0, 1348, 23))
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QStatusBar(MainWindow)
         self.statusbar.setObjectName(u"statusbar")
@@ -174,6 +203,9 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.undo.setText(QCoreApplication.translate("MainWindow", u"undo", None))
+        self.save.setText(QCoreApplication.translate("MainWindow", u"save", None))
+        self.redo.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
         self.importButton.setText(QCoreApplication.translate("MainWindow", u"  import", None))
         self.beautify.setText(QCoreApplication.translate("MainWindow", u"  beautify", None))
         self.json.setText(QCoreApplication.translate("MainWindow", u"  json", None))
