@@ -1,9 +1,10 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QHBoxLayout, QComboBox
-from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu,QWidget,QTabWidget,QPushButton
+from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction
 from PySide6.QtCore import QSize
 from ui_form import Ui_MainWindow
 from src import xml_methods
+
 
 #class OutputCapture:
     #def __init__(self, line_edit):
@@ -23,6 +24,7 @@ class MainWindow(QMainWindow):
         # Set up resizable layout
         self.setup_resizable_layout()
 
+
         # Set up output capture
        # self.output_capture = OutputCapture(self.ui.lineEdit)
         #sys.stdout = self.output_capture
@@ -35,7 +37,8 @@ class MainWindow(QMainWindow):
         self.redo_stack = []
         # push any change in output to undo stack
         self.ui.plainTextEdit_2.textChanged.connect(self.push_to_undo_stack)
-    
+        self.setWindowIcon(QIcon("icons/icons8-palestine-100.png"))
+
     def push_to_undo_stack(self):
         if self.ui.plainTextEdit_2.toPlainText() != self.undo_stack[-1]:
             self.undo_stack.append(self.ui.plainTextEdit_2.toPlainText())
@@ -77,6 +80,51 @@ class MainWindow(QMainWindow):
             h_layout.addWidget(button)
         main_layout.addLayout(h_layout)
 
+
+
+        # Create widgets to be added to the tabs
+        widget1 = QWidget()
+        widget1.setLayout(main_layout)
+
+        Widget2=QWidget()
+
+        layout = QHBoxLayout()
+
+
+
+        # Add horizontal spacer to the left
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+        # Create a push button
+        button = QPushButton('Graph Show!', self)
+        button.clicked.connect(self.on_button_click)
+
+        button.setIconSize(QSize(60,60))
+        button.setIcon(QIcon("icons/icons8-graph-60.png"))
+
+        # Add the button to the layout
+        layout.addWidget(button)
+
+        # Add horizontal spacer to the right
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+        Widget2.setLayout(layout)
+
+
+
+
+        self.tab_widget = QTabWidget()
+
+
+        # Add tabs to the QTabWidget
+        self.tab_widget.addTab(widget1, "part 1")
+        self.tab_widget.addTab(Widget2, "part 2")
+
+
+
+        # Set the central widget to be the QTabWidget
+        self.setCentralWidget(self.tab_widget)
+    def on_button_click(self):
+        print("clicked")
     def setup_icons(self):
         # Set the icon for the 'Import' button
         icon_size = QSize(64, 64)
@@ -134,7 +182,6 @@ class MainWindow(QMainWindow):
             # Save the text to the file
             with open(self.file_path, 'w') as file:
                 file.write(text_to_save)
-
     def compress(self):
         xml_methods.compress(self.file_path, self.output_path)
         print("compress pressed")
