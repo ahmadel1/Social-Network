@@ -31,6 +31,16 @@ class MainWindow(QMainWindow):
         self.setup_icons()
         self.connect_buttons()
         self.ui.plainTextEdit_2.setTabStopDistance(4 * self.ui.plainTextEdit_2.fontMetrics().horizontalAdvance(' '))
+        self.undo_stack = [""]
+        self.redo_stack = []
+        # push any change in output to undo stack
+        self.ui.plainTextEdit_2.textChanged.connect(self.push_to_undo_stack)
+    
+    def push_to_undo_stack(self):
+        if self.ui.plainTextEdit_2.toPlainText() != self.undo_stack[-1]:
+            self.undo_stack.append(self.ui.plainTextEdit_2.toPlainText())
+            self.redo_stack = []
+
     
     def setup_resizable_layout(self):
         # Add a layout to the central widget for resizable behavior
@@ -96,14 +106,26 @@ class MainWindow(QMainWindow):
         self.ui.decompress.clicked.connect(self.decompress)
         self.ui.minify.clicked.connect(self.on_minify_clicked)
         self.ui.check.clicked.connect(self.check)
-
+        self.ui.undo.clicked.connect(self.undo)
+        self.ui.redo.clicked.connect(self.redo)
+        
         # Add a combo box to select the active text editor
         self.editor_selection = "plainTextEdit"
 
+    def undo(self):
+        if len(self.undo_stack) > 1:
+            self.redo_stack.append(self.undo_stack.pop())
+            self.ui.plainTextEdit_2.setPlainText(self.undo_stack[-1])
+            
+
+    def redo(self):
+        if self.redo_stack:
+            self.undo_stack.append(self.redo_stack.pop())
+            self.ui.plainTextEdit_2.setPlainText(self.undo_stack[-1])
 
     def save_text_in_file(self):
         # Get the text from the QPlainTextEdit
-        text_to_save = self.ui.plainTextEdit.toPlainText()
+        text_to_save = self.ui.plainTextEdit_2.toPlainText()
 
         # Get the file path using QFileDialog
         self.file_path, _ = QFileDialog.getSaveFileName(self, 'Save File', '', 'Text Files (*.xml);;All Files (*)')

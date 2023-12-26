@@ -95,15 +95,15 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addLayout(self.horizontalLayout_2)
 
-        self.lineEdit = QLineEdit(self.verticalLayoutWidget)
-        self.lineEdit.setObjectName(u"lineEdit")
+        # self.lineEdit = QLineEdit(self.verticalLayoutWidget)
+        # self.lineEdit.setObjectName(u"lineEdit")
 
-        self.verticalLayout.addWidget(self.lineEdit)
+        # self.verticalLayout.addWidget(self.lineEdit)
 
-        self.lineEdit_2 = QLineEdit(self.verticalLayoutWidget)
-        self.lineEdit_2.setObjectName(u"lineEdit_2")
+        # self.lineEdit_2 = QLineEdit(self.verticalLayoutWidget)
+        # self.lineEdit_2.setObjectName(u"lineEdit_2")
 
-        self.verticalLayout.addWidget(self.lineEdit_2)
+        # self.verticalLayout.addWidget(self.lineEdit_2)
 
         self.horizontalLayout = QHBoxLayout()
         self.horizontalLayout.setObjectName(u"horizontalLayout")
