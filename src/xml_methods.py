@@ -6,17 +6,17 @@ from .xml_utilities.minify import *
 
 
 
-def xml_to_json(input_path, output_path):
+def xml_to_json(xml_content):
     try:
-        convert_xml_to_json(input_path, output_path)
-        print(f"Conversion successful. JSON data written to {output_path}")
+        print(f"Conversion successful.")
+        return convert_xml_to_json(xml_content)
     except Exception as e:
         print(f"Error converting XML to JSON: {e}")
 
-def beautify_xml(input_path, output_path):
+def beautify_xml(xml_content):
     try:
-        beautify(input_path, output_path)
-        print(f"Beautification successful. Beautified XML written to {output_path}")
+        print(f"Beautification successful. ")
+        return beautify(xml_content)
     except Exception as e:
         print(f"Error beautifying XML: {e}")
 
@@ -44,6 +44,6 @@ def decompress_xml(input_path, output_path):
 def check_xml(input_path, output_path):
     pass
 
-def minify_xml(input_path, output_path):
-    minify(input_path, output_path)
+def minify_xml(xml_content):
+    return minify(xml_content)
 

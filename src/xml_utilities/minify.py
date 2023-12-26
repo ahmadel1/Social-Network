@@ -1,11 +1,8 @@
-def minify(input_file, output_file):
-    with open(input_file, 'r') as f:
-        content = f.readlines()
-        
-    for i in range(len(content)):
-        content[i] = content[i].strip()
-    content = ''.join(content)
+def minify(xml_content):
+    xml_content = xml_content.split('\n')
+    for i in range(len(xml_content)):
+        xml_content[i] = xml_content[i].strip()
+    xml_content = ''.join(xml_content)
     
-    with open(output_file, 'w') as f:
-        f.write(content)
+    return xml_content
 

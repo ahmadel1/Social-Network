@@ -1,16 +1,16 @@
+import json
 from .xmlTree import *
 from ..graph_utilities.creator import *
-from ..graph_utilities.dictionary import *
 
 
-def xmlTree_to_json(root_element):
-    result = Dictionary()
+def xml_to_json(root_element):
+    result = {}
     for child in root_element.children:
         child_data = None
         # child_data can be a dictionary or a string
         if len(child.children) > 0:
             # in case the child has children, call the function recursively
-            child_data = xmlTree_to_json(child)
+            child_data = xml_to_json(child)
         else:
             child_data = child.text
 
@@ -28,32 +28,12 @@ def xmlTree_to_json(root_element):
     return result
 
 
-def prettify_json(json_str, indent=2):
-    result = ""
-    level = 0
-    for char in json_str:
-        if char == "{" or char == "[":
-            level += 1
-            result += char + "\n" + " " * (level * indent)
-        elif char == "}" or char == "]":
-            level -= 1
-            result += "\n" + " " * (level * indent) + char
-        elif char == ",":
-            result += char + "\n" + " " * (level * indent)
-        else:
-            result += char
-    return result
-
-
 def create_json_string(xml_string):
     # create a tree from the xml string
-    xml_tree = create_xmlTree(xml_string)
-
+    xml_tree = create_tree(xml_string)
     # convert the tree to a dictionary
-    json_dictionary = xmlTree_to_json(xml_tree.root)
-
-    # return the prettified json string
-    return prettify_json(json_dictionary.convert_to_str())
+    json_dict = xml_to_json(xml_tree.root)
+    return json.dumps(json_dict, indent=2)
 
 
 def create_json_file(file_path, data):
@@ -62,15 +42,11 @@ def create_json_file(file_path, data):
     json_file.close()
 
 
-def get_xml_string(file_path):
-    with open(file_path, "r") as xml_file:
-        xml_string = xml_file.read()
-    xml_file.close()
-    # remove all the new lines, tabs and spaces from the xml string
+def get_xml_string(xml_string):
     return xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
 
 
-def create_xmlTree(xml_string):
+def create_tree(xml_string):
     xml_tree = XmlTree()
     tag_buffer = ""
     value_buffer = ""
@@ -145,19 +121,19 @@ def get_users_array(json_dict):
     return users_array
 
 
-def convert_xml_to_json(input_xml_path, output_json_path):
-    xml_string = get_xml_string(input_xml_path)
+def convert_xml_to_json(xml_content):
+    xml_string = get_xml_string(xml_content)
     json_string = create_json_string(xml_string)
-    create_json_file(output_json_path, json_string)
-    return output_json_path
-
-
-def get_users_array_from_xml(input_xml_path):
-    xml_string = get_xml_string(input_xml_path)
-    json_dict = xmlTree_to_json(create_xmlTree(xml_string).root)
-    return get_users_array(json_dict)
+    return json_string
 
 
 
-# input_xml_path = "src/xml_utilities/Sample files/sample.xml"
-# users_array = get_users_array_from_xml(input_xml_path)
+### test ###
+
+# xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
+# # create a tree from the xml string
+# xml_tree = create_tree(xml_string)
+# # convert the tree to a dictionary
+# json_dict = xml_to_json(xml_tree.root)
+# # create user array form  (JSON) object
+# users = get_users_array(json_dict)
