@@ -251,7 +251,7 @@ class MainWindow(QMainWindow):
         if len(self.undo_stack) > 1:
             self.redo_stack.append(self.undo_stack.pop())
             self.ui.plainTextEdit_2.setPlainText(self.undo_stack[-1])
-            
+            self.ui.plainTextEdit_2.setExtraSelections([])
 
     def redo(self):
         if self.redo_stack:
@@ -279,6 +279,7 @@ class MainWindow(QMainWindow):
 
     def on_minify_clicked(self):
         try:
+            self.ui.plainTextEdit_2.setExtraSelections([])
             xml_content = self.ui.plainTextEdit.toPlainText()
             minified_content = xml_methods.minify_xml(xml_content)
             print(minified_content)
@@ -301,11 +302,16 @@ class MainWindow(QMainWindow):
         print("save pressed")
 
     def check(self):
-        self.output_path = self.ui.lineEdit_2.text()
-        self.ui.lineEdit_2.clear()
-        self.ui.lineEdit.clear()
-        xml_methods.check_xml(self.file_path, self.output_path)
-        print("on check pressed")
+        try:
+            self.ui.plainTextEdit_2.setExtraSelections([])
+            xml_content = self.ui.plainTextEdit.toPlainText()
+            lines_contain_erros = xml_methods.check_for_errors(xml_content)    
+            self.ui.plainTextEdit_2.setPlainText(xml_content)
+            self.focus_on_lines(lines_contain_erros)
+            print("check pressed")
+        except Exception as e:
+            print(f"Error during xml checking: {e}")
+       
 
     def open_python_file(self):
         try:
@@ -325,9 +331,9 @@ class MainWindow(QMainWindow):
 
     def on_beautify_clicked(self):
         try:
+            self.ui.plainTextEdit_2.setExtraSelections([])
             xml_content = self.ui.plainTextEdit.toPlainText()
             beautified_content = xml_methods.beautify_xml(xml_content)
-            print(beautified_content)
             self.ui.plainTextEdit_2.setPlainText(beautified_content)
             print("Beautify pressed")
         except Exception as e:
@@ -335,6 +341,7 @@ class MainWindow(QMainWindow):
 
     def on_json_clicked(self):
         try:
+            self.ui.plainTextEdit_2.setExtraSelections([])
             xml_content = self.ui.plainTextEdit.toPlainText()
             json_content = xml_methods.xml_to_json(xml_content)
             print(json_content)
@@ -355,32 +362,38 @@ class MainWindow(QMainWindow):
             selected_editor = self.editor_selection
             if selected_editor:
                 self.ui.plainTextEdit.setPlainText(file_content)
-                self.focus_on_line(40)
 
-    def focus_on_line(self, line_number):
-        cursor = self.ui.plainTextEdit.textCursor()
+    def focus_on_lines(self, line_indices):
+        cursor = self.ui.plainTextEdit_2.textCursor()
         cursor.movePosition(QTextCursor.Start)
 
-        # Move the cursor to the beginning of the specified line
-        for _ in range(line_number-1):
-            cursor.movePosition(QTextCursor.NextBlock)
-
-        self.ui.plainTextEdit.setTextCursor(cursor)
-
         # Clear any previous selections
-        self.ui.plainTextEdit.setExtraSelections([])
+        self.ui.plainTextEdit_2.setExtraSelections([])
 
-        # Create a QTextEdit.ExtraSelection to highlight the line
-        selection = QTextEdit.ExtraSelection()
-        selection.format.setBackground(QColor(255, 0, 0))  # Set a red background color
-        selection.format.setProperty(QTextBlockFormat.FullWidthSelection, True)
-        selection.cursor = self.ui.plainTextEdit.textCursor()
-        selection.cursor.clearSelection()
+        # Accumulate selections in a list
+        selections = []
 
-        # Add the selection to the QTextEdit
-        self.ui.plainTextEdit.setExtraSelections([selection])
-        self.ui.plainTextEdit.setReadOnly(False)
+        for line_number in line_indices:
+            line_cursor = self.ui.plainTextEdit_2.textCursor()
+            line_cursor.movePosition(QTextCursor.Start)
 
+            # Move the cursor to the beginning of the specified line
+            for _ in range(line_number - 1):
+                line_cursor.movePosition(QTextCursor.NextBlock)
+
+            # Create a selection for the current line
+            selection = QTextEdit.ExtraSelection()
+            selection.format.setBackground(QColor(255, 0, 0))  # Set a red background color
+            selection.format.setProperty(QTextBlockFormat.FullWidthSelection, True)
+            selection.cursor = line_cursor
+            selection.cursor.clearSelection()
+
+            selections.append(selection)
+
+        # Set all selections at once
+        self.ui.plainTextEdit_2.setExtraSelections(selections)
+
+        self.ui.plainTextEdit_2.setReadOnly(True)
 
 def read():
     return widget.ui.lineEdit_2.text()
