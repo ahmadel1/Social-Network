@@ -1,13 +1,9 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu,QWidget,QTabWidget,QPushButton,QPlainTextEdit,QInputDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu, QWidget, QTabWidget, QPushButton, QPlainTextEdit, QInputDialog, QMessageBox
 from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction
 from PySide6.QtCore import QSize
 from ui_form import Ui_MainWindow
 from src import xml_methods
-from PyQt5.QtWidgets import QFileDialog, QMessageBox
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu, QWidget, QTabWidget, QPushButton, QPlainTextEdit, QInputDialog, QMessageBox
-from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat
-from PySide6.QtCore import QSize
 
 
 #class OutputCapture:
