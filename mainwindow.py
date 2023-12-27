@@ -270,11 +270,11 @@ class MainWindow(QMainWindow):
             with open(self.file_path, 'w') as file:
                 file.write(text_to_save)
     def compress(self):
-        xml_methods.compress(self.file_path, self.output_path)
+        xml_methods.compress()
         print("compress pressed")
 
     def decompress(self):
-        xml_methods.decompress(self.file_path, self.output_path)
+        xml_methods.decompress()
         print("decompress pressed")
 
     def on_minify_clicked(self):
