@@ -1,18 +1,15 @@
-from collections import *
 import re
 
-def check_for_errors(filename):
-    file = open(filename)
-    lines = file.readlines()
-    copy = lines.copy()
-    copy = "".join(copy)
-    print(copy)
+def check_for_errors(xml_content):
+    lines = xml_content
+    copy = lines
+    lines = lines.split("\n")
     tags = []
     for line in lines:
         line = line.replace(">",">\n")
         line = line.replace("<","\n<")
         tags = tags + re.findall("<.*>",line)
-    
+        
     stack = []
     i = 0
     while i < len(tags):
@@ -20,13 +17,10 @@ def check_for_errors(filename):
         if(tag[1] != "/"):
             stack.append(tag[1:-1])
         else:
-            print(tag)
             if(tag[2:-1] not in stack):
-                print(tag,"not opened")
                 copy = copy.replace(tag,"<#"+tag[2:-1]+"#>",1)
             elif(tag[2:-1] in  stack):
                 required_tag = stack.pop(stack.index(tag[2:-1]))
-                print(stack.count(required_tag))
                 if(stack.count(required_tag) >= 1):
                     copy = copy.replace("<"+required_tag+">","<%"+required_tag+">",stack.count(required_tag)+1)
                     copy = copy.replace("<%"+required_tag+">","<"+required_tag+">",stack.count(required_tag))
@@ -34,11 +28,9 @@ def check_for_errors(filename):
                     copy = copy.replace("<"+required_tag+">","*",1)
                 copy = copy.replace(tag,"*",1)
         i = i +1
-    print(stack)
 
     
     copy_lines = copy.split("\n")
-
     errors = []
     
     for c in range(len(copy_lines)):
@@ -47,5 +39,3 @@ def check_for_errors(filename):
             errors.append(c+1)
     return errors
 
-
-print(check_for_errors("sample.xml"))
