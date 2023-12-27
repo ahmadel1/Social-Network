@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu, QWidget, QTabWidget, QPushButton, QPlainTextEdit, QInputDialog, QMessageBox
 from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction
-from PySide6.QtCore import QSize
+from PySide6.QtCore import QSize,QThread
 from ui_form import Ui_MainWindow
 from src import xml_methods
 
@@ -81,6 +81,7 @@ class MainWindow(QMainWindow):
 
         for button in buttons:
             h_layout.addWidget(button)
+
         main_layout.addLayout(h_layout)
 
 
@@ -139,14 +140,22 @@ class MainWindow(QMainWindow):
         mutual.clicked.connect(self.on_mutual_click)
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
+        post=QPushButton("Post Search")
+        post.setIconSize(QSize(64,64))
+        post.setIcon(QIcon("icons/icons8-search-64.png"))
+        layout.addWidget(post)
+        post.clicked.connect(self.on_post_click)
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
 
 
         main_lay=QVBoxLayout()
-        plaintext=QPlainTextEdit()
-        main_lay.addWidget(plaintext)
+        self.plaintext=QPlainTextEdit()
+        main_lay.addWidget(self.plaintext)
 
         self.line_talk=QLineEdit()
         self.line_talk.setReadOnly(True)
+
 
 
 
@@ -174,6 +183,11 @@ class MainWindow(QMainWindow):
 
         # Set the central widget to be the QTabWidget
         self.setCentralWidget(self.tab_widget)
+    def on_post_click(self):
+        post_genre, ok_pressed = QInputDialog.getText(self, 'post genre', 'Enter post genre')
+        if ok_pressed:
+            print(f"User input: {post_genre}")
+
     def on_Graph_click(self):
         print("graph")
     def on_Active_click(self):
@@ -345,8 +359,14 @@ class MainWindow(QMainWindow):
             print(f"Error reading file: {e}")
 
     def on_fix_clicked(self):
-        xml_methods.fix_xml(self.file_path, self.output_path)
-        self.open_python_file()
+        try:
+            self.ui.plainTextEdit_2.setExtraSelections([])
+            xml_content = self.ui.plainTextEdit.toPlainText()
+            beautified_content = xml_methods.fix(xml_content)
+            self.ui.plainTextEdit_2.setPlainText(beautified_content)
+            print("Beautify pressed")
+        except Exception as e:
+            print(f"Error during beautification: {e}")
 
     def on_beautify_clicked(self):
         try:

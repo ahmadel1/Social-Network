@@ -1,7 +1,8 @@
 from collections import *
 import re
 from PySide6.QtCore import QTimer
-
+from ui_form import Ui_MainWindow
+from PyQt6.QtWidgets import QApplication, QMessageBox
 def binary_search(num,list:list,s,e):
     mid = int((s+e)/2)
     if(list[mid] == num):
@@ -82,8 +83,21 @@ def get_conflicts(file):
                 print("Conflict between tags at line:",binary_search(ind,end_lines,0,len(end_lines)-1)+2)
                 print(tag,next_tag)
                 print("Choose One:")
-                #choose = mainwindow.MainWindow..ui.lineEdit_2.text()
-                choose=tag
+
+
+                msg_box = QMessageBox()
+                msg_box.setText("Choose a variable")
+                msg_box.addButton(tag, QMessageBox.ButtonRole.YesRole)
+                msg_box.addButton(next_tag, QMessageBox.ButtonRole.NoRole)
+                result = msg_box.exec()
+                choose="None"
+                if result == QMessageBox.ButtonRole.YesRole:
+                    print("User chose Tag")
+                    choose =tag
+                elif result == QMessageBox.ButtonRole.NoRole:
+                    print("User chose Next Tag")
+                    choose=next_tag
+
                 conflict_fixes.append(choose)
         else:
             ind = file_content.index(tag)
