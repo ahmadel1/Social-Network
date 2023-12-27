@@ -1,5 +1,5 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu,QWidget,QTabWidget,QPushButton
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu,QWidget,QTabWidget,QPushButton,QPlainTextEdit,QInputDialog
 from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction
 from PySide6.QtCore import QSize
 from ui_form import Ui_MainWindow
@@ -23,6 +23,9 @@ class MainWindow(QMainWindow):
 
         # Set up resizable layout
         self.setup_resizable_layout()
+        self.id=-99
+        self.id2=-200
+        self.flag=True
 
 
         # Set up output capture
@@ -96,18 +99,66 @@ class MainWindow(QMainWindow):
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         # Create a push button
-        button = QPushButton('Graph Show!', self)
-        button.clicked.connect(self.on_button_click)
+        Graph = QPushButton('Graph Show!', self)
+        Graph.clicked.connect(self.on_Graph_click)
 
-        button.setIconSize(QSize(60,60))
-        button.setIcon(QIcon("icons/icons8-graph-60.png"))
+        Graph.setIconSize(QSize(60,60))
+        Graph.setIcon(QIcon("icons/icons8-graph-60.png"))
 
         # Add the button to the layout
-        layout.addWidget(button)
+        layout.addWidget(Graph)
 
         # Add horizontal spacer to the right
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
-        Widget2.setLayout(layout)
+        influncer = QPushButton('Most influncer!', self)
+        layout.addWidget(influncer)
+        influncer.setIcon(QIcon("icons/icons8-influencer-64.png"))
+        influncer.setIconSize(QSize(64,64))
+        influncer.clicked.connect(self.on_influncer_click)
+
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+        Active = QPushButton('Most Active', self)
+        Active.setIcon(QIcon("icons/icons8-hyperactive-64.png"))
+        Active.setIconSize(QSize(64,64))
+        layout.addWidget(Active)
+        Active.clicked.connect(self.on_Active_click)
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+        following=QPushButton("Following")
+        following.setIconSize(QSize(64,64))
+        following.setIcon(QIcon("icons/icons8-follow-64.png"))
+        layout.addWidget(following)
+        following.clicked.connect(self.on_following_click)
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+        mutual=QPushButton("Mutual Followers")
+        mutual.setIconSize(QSize(64,64))
+        mutual.setIcon(QIcon("icons/icons8-agree-64.png"))
+        layout.addWidget(mutual)
+        mutual.clicked.connect(self.on_mutual_click)
+        layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
+
+
+
+        main_lay=QVBoxLayout()
+        plaintext=QPlainTextEdit()
+        main_lay.addWidget(plaintext)
+
+        self.line_talk=QLineEdit()
+        self.line_talk.setReadOnly(True)
+
+
+
+
+
+        main_lay.addWidget(self.line_talk)
+
+
+        main_lay.addLayout(layout)
+
+
+        Widget2.setLayout(main_lay)
 
 
 
@@ -123,8 +174,44 @@ class MainWindow(QMainWindow):
 
         # Set the central widget to be the QTabWidget
         self.setCentralWidget(self.tab_widget)
-    def on_button_click(self):
-        print("clicked")
+    def on_Graph_click(self):
+        print("graph")
+    def on_Active_click(self):
+        print("active")
+    def on_influncer_click(self):
+        print("influncer")
+    def on_following_click(self):
+        print("following")
+
+
+                # Use QInputDialog to get user input
+        self.id, ok_pressed = QInputDialog.getInt(self, 'Input ID 1', 'Enter the ID:')
+
+        if ok_pressed:
+                    # User pressed OK, handle the input
+            print(f"User input: {self.id}")
+    def on_mutual_click(self):
+        print("following")
+
+                # Use QInputDialog to get the first input
+        self.id, ok1_pressed = QInputDialog.getInt(self, 'Input ID-1', 'Enter the first ID:')
+
+        if ok1_pressed:
+            print(f"First input (as integer): {self.id}")
+
+                    # Use QInputDialog to get the second input
+            self.id2, ok2_pressed = QInputDialog.getInt(self, 'Input ID-2', 'Enter the second ID:')
+
+            if ok2_pressed:
+                print(f"Second input (as integer): {self.id2}")
+
+
+
+
+
+
+
+
     def setup_icons(self):
         # Set the icon for the 'Import' button
         icon_size = QSize(64, 64)
