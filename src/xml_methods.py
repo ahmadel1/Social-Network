@@ -27,16 +27,16 @@ def fix_xml(input_path, output_path):
     except Exception as e:
         print(f"Error fixing XML: {e}")
 
-def compress_xml():
+def compress_xml(input_path, output_path):
     try:
-        compress()
+        return compress(input_path, output_path)
         print(f"Compression successful.")
     except Exception as e:
         print(f"Error compressing XML: {e}")
 
-def decompress_xml():
+def decompress_xml(input_path, output_path):
     try:
-        decompress()
+        return decompress(input_path, output_path)
         print(f"Decompression successful.")
     except Exception as e:
         print(f"Error decompressing XML: {e}")

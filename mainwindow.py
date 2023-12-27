@@ -4,6 +4,10 @@ from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction
 from PySide6.QtCore import QSize
 from ui_form import Ui_MainWindow
 from src import xml_methods
+from PyQt5.QtWidgets import QFileDialog, QMessageBox
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu, QWidget, QTabWidget, QPushButton, QPlainTextEdit, QInputDialog, QMessageBox
+from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat
+from PySide6.QtCore import QSize
 
 
 #class OutputCapture:
@@ -269,13 +273,32 @@ class MainWindow(QMainWindow):
             # Save the text to the file
             with open(self.file_path, 'w') as file:
                 file.write(text_to_save)
+    
+ 
     def compress(self):
-        xml_methods.compress()
-        print("compress pressed")
+        widget_parent = QWidget()
+
+        input_file, _ = QFileDialog.getOpenFileName(widget_parent, "Select Input File", "", "XML Files (*.xml);;All Files (*)")
+        if not input_file:
+            return  
+        output_file, _ = QFileDialog.getSaveFileName(widget_parent, "Select Output File", "", "Pickle Files (*.pkl);;All Files (*)")
+        if not output_file:
+            return  
+        output_message = xml_methods.compress(input_file, output_file)
+        QMessageBox.information(self, "Compression Result", output_message)
 
     def decompress(self):
-        xml_methods.decompress()
-        print("decompress pressed")
+        widget_parent = QWidget()
+        input_file, _ = QFileDialog.getOpenFileName(widget_parent, "Select Input File", "", "Pickle Files (*.pkl);;All Files (*)")
+        if not input_file:
+            return  
+        output_file, _ = QFileDialog.getSaveFileName(widget_parent, "Select Output File", "", "XML Files (*.xml);;All Files (*)")
+        if not output_file:
+            return 
+        output_message = xml_methods.decompress(input_file, output_file)
+        QMessageBox.information(self, "Decompression Result", output_message)
+
+
 
     def on_minify_clicked(self):
         try:
