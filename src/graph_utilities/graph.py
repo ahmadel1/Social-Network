@@ -2,14 +2,19 @@ from .User import *
 from .post import *
 from .dictionary import *
 from .template import *
+from ..xml_utilities.xmlToJsonParser import *
 from ..xml_utilities.xmlToJson import *
 
 
 class Graph:
-    def __init__(self, users):
+    def __init__(self, xml_string):
+        parser = XmlToJsonParser(xml_string)
+        users_array = parser.get_usersArray()
         self.users = Dictionary()
         self.adjacency_list = Dictionary()
-        for user in users:
+
+        # construct the graph
+        for user in users_array:
             self.users[user.id] = user
             self.adjacency_list[user.id] = user.following
 
@@ -49,28 +54,14 @@ class Graph:
         return post_searcher.get_result(topic)
 
 
-# xml_string = get_xml_string_fromPath("src/xml_utilities/Sample files/sample.xml")
-# # create a tree from the xml string
-# xml_tree = create_tree(xml_string)
-# # convert the tree to a dictionary
-# json_dict = xml_to_json(xml_tree.root)
-# # create user array form  (JSON) object
-# users = get_users_array(json_dict)
+xml_string = get_xml_string_fromPath("src/xml_utilities/Sample files/sample.xml")
 
-# user1 = User()
-# user1.name = "abdoo"
-# user1.id = "4"
-# user1.following = ["1"]
-# users[0].followers.append("4")
-# user1.followers = ["1"]
-# users[0].following.append("4")
-# users.append(user1)
-# # construct the graph and test the methods
-# network = Graph(users)
-# network.displayNetwork()
-# posts = network.search_posts("economy")
-# for post in posts:
-#     print(post)
-# print(network.get_most_active())
-# print(network.get_most_influencer())
-# print(network.get_mutuals("2", "4")[0])
+# construct the graph and test the methods
+network = Graph(xml_string)
+network.displayNetwork()
+posts = network.search_posts("economy")
+for post in posts:
+    print(post)
+print(network.get_most_active())
+print(network.get_most_influencer())
+print(network.get_mutuals("2", "3")[0])

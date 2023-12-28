@@ -40,7 +40,6 @@ class BFS_Template(ABC):
                     for neighbor_id in self.adjacency_list[user_id]:
                         if not visited_nodes[neighbor_id]:
                             queue.append(neighbor_id)
-        print(self.result)
         return self.result
 
 
