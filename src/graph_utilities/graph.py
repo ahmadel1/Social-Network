@@ -26,8 +26,12 @@ class Graph:
         for id, users in self.adjacency_list.items():
             print(f" user({id}): is connected to ({users})")
 
-    def get_most_activer(self):
-        pass
+    def get_most_active(self):
+        # instantiate the appropriate breadth-first search template class
+        active_searcher = bfs_active(self.users, self.adjacency_list)
+        result = active_searcher.get_result()
+        # after getting the result, find the user_id with the heighest degree and return the user object
+        return self.users[max(result, key=result.__getitem__)]
 
     def get_most_influencer(self):
         # instantiate the appropriate breadth-first search template class
@@ -45,20 +49,28 @@ class Graph:
         return post_searcher.get_result(topic)
 
 
-xml_string = get_xml_string_fromPath("src/xml_utilities/Sample files/sample.xml")
-# create a tree from the xml string
-xml_tree = create_tree(xml_string)
-# convert the tree to a dictionary
-json_dict = xml_to_json(xml_tree.root)
-# create user array form  (JSON) object
-users = get_users_array(json_dict)
+# xml_string = get_xml_string_fromPath("src/xml_utilities/Sample files/sample.xml")
+# # create a tree from the xml string
+# xml_tree = create_tree(xml_string)
+# # convert the tree to a dictionary
+# json_dict = xml_to_json(xml_tree.root)
+# # create user array form  (JSON) object
+# users = get_users_array(json_dict)
 
-# construct the graph and test the methods
-network = Graph(users)
-network.displayNetwork()
-posts = network.search_posts("economy")
-for post in posts:
-    print(post)
-print(network.get_suggestions())
-print(network.get_most_influencer())
-print(network.get_mutuals("2", "3")[0].name)
+# user1 = User()
+# user1.name = "abdoo"
+# user1.id = "4"
+# user1.following = ["1"]
+# users[0].followers.append("4")
+# user1.followers = ["1"]
+# users[0].following.append("4")
+# users.append(user1)
+# # construct the graph and test the methods
+# network = Graph(users)
+# network.displayNetwork()
+# posts = network.search_posts("economy")
+# for post in posts:
+#     print(post)
+# print(network.get_most_active())
+# print(network.get_most_influencer())
+# print(network.get_mutuals("2", "4")[0])
