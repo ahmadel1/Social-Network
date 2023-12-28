@@ -4,6 +4,7 @@ from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction
 from PySide6.QtCore import QSize,QThread
 from ui_form import Ui_MainWindow
 from src import xml_methods
+from src.graph_utilities import graph
 
 
 #class OutputCapture:
@@ -27,9 +28,8 @@ class MainWindow(QMainWindow):
         self.id2=-200
         self.flag=True
 
-
         # Set up output capture
-       # self.output_capture = OutputCapture(self.ui.lineEdit)
+        # self.output_capture = OutputCapture(self.ui.lineEdit)
         #sys.stdout = self.output_capture
 
         # Set up icons and connect buttons to methods
@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
         self.redo_stack = []
         # push any change in output to undo stack
         self.ui.plainTextEdit_2.textChanged.connect(self.push_to_undo_stack)
-        self.setWindowIcon(QIcon("icons/icons8-palestine-100.png"))
+        
 
     def push_to_undo_stack(self):
         if self.ui.plainTextEdit_2.toPlainText() != self.undo_stack[-1]:
@@ -84,17 +84,11 @@ class MainWindow(QMainWindow):
 
         main_layout.addLayout(h_layout)
 
-
-
         # Create widgets to be added to the tabs
         widget1 = QWidget()
         widget1.setLayout(main_layout)
-
         Widget2=QWidget()
-
         layout = QHBoxLayout()
-
-
 
         # Add horizontal spacer to the left
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
@@ -147,8 +141,6 @@ class MainWindow(QMainWindow):
         post.clicked.connect(self.on_post_click)
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-
-
         main_lay=QVBoxLayout()
         self.plaintext=QPlainTextEdit()
         main_lay.addWidget(self.plaintext)
@@ -156,78 +148,110 @@ class MainWindow(QMainWindow):
         self.line_talk=QLineEdit()
         self.line_talk.setReadOnly(True)
 
-
-
-
-
-
         main_lay.addWidget(self.line_talk)
-
-
         main_lay.addLayout(layout)
-
-
         Widget2.setLayout(main_lay)
-
-
-
-
         self.tab_widget = QTabWidget()
-
 
         # Add tabs to the QTabWidget
         self.tab_widget.addTab(widget1, "part 1")
         self.tab_widget.addTab(Widget2, "part 2")
 
-
-
         # Set the central widget to be the QTabWidget
         self.setCentralWidget(self.tab_widget)
+
+
+    # helper function to check if xml in plaintextedit and return it as string
+    def check_xml_for_graph(self):
+        xml_content = self.ui.plainTextEdit.toPlainText()
+        if not xml_content:
+            QMessageBox.information(self, "Error", "Please enter xml content")
+            return
+        elif len(xml_methods.check_for_errors(xml_content)) > 0 :
+            QMessageBox.information(self, "Error", "Please enter valid xml content")
+            return
+        return xml_content
+    
     def on_post_click(self):
-        post_genre, ok_pressed = QInputDialog.getText(self, 'post genre', 'Enter post genre')
+        xml_content = self.check_xml_for_graph()
+        network = graph.make_network(xml_content)
+        post_genre, ok_pressed = QInputDialog.getText(self, 'Post Search', 'Enter Search Term')
         if ok_pressed:
             print(f"User input: {post_genre}")
+        else: 
+            return
+        found_posts = network.search_posts(post_genre)
+        posts = ""
+        i = 0
+        for post in found_posts:
+            posts += f"post {i}: {post.getBody()}\n\n"
+            i += 1
+        self.plaintext.setPlainText(posts)
+        print("post")
+        
+
 
     def on_Graph_click(self):
+        xml_content = self.check_xml_for_graph()
+        network = graph.make_network(xml_content)
+        network.draw_network()
         print("graph")
+    
     def on_Active_click(self):
+        xml_content = self.check_xml_for_graph()
+        xml_content = self.ui.plainTextEdit.toPlainText()
+        network = graph.make_network(xml_content)
+        most_active = network.get_most_active()
+        self.plaintext.setPlainText(f"Most active user: {most_active}")
         print("active")
+    
     def on_influncer_click(self):
+        xml_content = self.check_xml_for_graph()
+        network = graph.make_network(xml_content)
+        most_influencer = network.get_most_influencer()
+        self.plaintext.setPlainText(f"Most influencer user: {most_influencer}")
         print("influncer")
+    
+    # need to be fixed from backend
     def on_following_click(self):
+        # xml_content = self.check_xml_for_graph()
+        # network = graph.make_network(xml_content)
+        # self.id, ok_pressed = QInputDialog.getInt(self, 'Input ID 1', 'Enter the ID:')
+        # suggestions = network.get_suggestions(self.id)
+        # self.plaintext.setPlainText(f"Following suggestions for user {self.id}: {suggestions}")
+        # if ok_pressed:
+        #     print(f"User input: {self.id}")
+        
         print("following")
 
 
-                # Use QInputDialog to get user input
-        self.id, ok_pressed = QInputDialog.getInt(self, 'Input ID 1', 'Enter the ID:')
-
-        if ok_pressed:
-                    # User pressed OK, handle the input
-            print(f"User input: {self.id}")
     def on_mutual_click(self):
-        print("following")
-
-                # Use QInputDialog to get the first input
+        xml_content = self.check_xml_for_graph()
+        network = graph.make_network(xml_content)
+        # Use QInputDialog to get the first input
         self.id, ok1_pressed = QInputDialog.getInt(self, 'Input ID-1', 'Enter the first ID:')
 
         if ok1_pressed:
             print(f"First input (as integer): {self.id}")
-
-                    # Use QInputDialog to get the second input
+            # Use QInputDialog to get the second input
             self.id2, ok2_pressed = QInputDialog.getInt(self, 'Input ID-2', 'Enter the second ID:')
-
             if ok2_pressed:
                 print(f"Second input (as integer): {self.id2}")
-
-
-
-
+            else:
+                return
+        else:
+            return
+        
+        mutuals = network.get_mutuals(str(self.id), str(self.id2))
+        self.plaintext.setPlainText(f"Mutual followers for users {self.id} and {self.id2}: {mutuals}")
+        print("mutual")
 
 
 
 
     def setup_icons(self):
         # Set the icon for the 'Import' button
+        self.setWindowIcon(QIcon("icons/icons8-palestine-100.png"))
         icon_size = QSize(64, 64)
         icon_size_small = QSize(54, 54)
         icon_paths = ["icons/icons8-import-50.png", "icons/icons8-makeup-brush-50.png",

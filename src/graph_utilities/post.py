@@ -16,3 +16,9 @@ class Post:
 
     def getBody(self):
         return self.body
+
+    def __str__(self):
+        return f"Post {self.body} (Topic: {self.topics})"
+
+    def hasKeyword(self, keyword):
+        return keyword in self.topics or self.body.find(keyword) != -1

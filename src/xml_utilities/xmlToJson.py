@@ -127,7 +127,12 @@ def convert_xml_to_json(xml_content):
     return json_string
 
 
-
+def get_xml_string_fromPath(file_path):
+    with open(file_path, "r") as xml_file:
+        xml_string = xml_file.read()
+    xml_file.close()
+    # remove all the new lines, tabs and spaces from the xml string
+    return xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
 ### test ###
 
 # xml_string = get_xml_string("src/xml_utilities/Sample files/sample.xml")
