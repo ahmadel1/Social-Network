@@ -162,8 +162,7 @@ def fix(xml_content):
     elif(len(stack) == 0):
         print("All good")
 
-    
-
+    xml_content = "\n".join(lines)
     return beautify(xml_content)
 
 #<<<<<<< HEAD
