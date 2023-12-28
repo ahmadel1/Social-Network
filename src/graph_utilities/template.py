@@ -17,35 +17,36 @@ class BFS_Template(ABC):
         visited_nodes = Dictionary()
         queue = []
 
-        # initialize visited_nodes and suggestions
+        # initialize visited_nodes
         for id, user in self.users.items():
             visited_nodes[id] = False
 
-        # initialize queue with the first user
-        first_key = next(iter(self.users))
-        queue.append(first_key)
+        for id, user in self.users.items():
+            # if the user is not visited yet add it to the queue then start the bfs
+            if not visited_nodes[id]:
+                queue.append(id)
 
-        while len(queue) > 0:
-            user_id = queue.pop(0)
-            # mark the user as visited
-            visited_nodes[user_id] = True
-            # get the user
-            user = self.users[user_id]
+                while len(queue) > 0:
+                    user_id = queue.pop(0)
+                    # mark the user as visited
+                    visited_nodes[user_id] = True
+                    # get the user
+                    user = self.users[user_id]
 
-            # call the variable step
-            self.process_user(user, target)
+                    # call the variable step
+                    self.process_user(user, target)
 
-            # add the user's neighbors to the queue
-            for neighbor_id in self.adjacency_list[user_id]:
-                if not visited_nodes[neighbor_id]:
-                    queue.append(neighbor_id)
-
+                    # add the user's neighbors to the queue
+                    for neighbor_id in self.adjacency_list[user_id]:
+                        if not visited_nodes[neighbor_id]:
+                            queue.append(neighbor_id)
+        print(self.result)
         return self.result
 
 
 class bfs_suggestions(BFS_Template):
     def __init__(self, users, adjacency_list):
-        self.result = Dictionary()
+        self.result = Dictionary()  # key: user id, value: list of user objects
         super().__init__(users, adjacency_list)
 
     def get_followers(
@@ -71,7 +72,7 @@ class bfs_suggestions(BFS_Template):
 
 class bfs_most_influencer(BFS_Template):
     def __init__(self, users, adjacency_list):
-        self.result = None
+        self.result = None  # user object
         super().__init__(users, adjacency_list)
 
     def process_user(self, user, target):
@@ -85,12 +86,24 @@ class bfs_most_influencer(BFS_Template):
 
 class bfs_posts(BFS_Template):
     def __init__(self, users, adjacency_list):
-        self.result = list()
+        self.result = list()  # list of post objects
         super().__init__(users, adjacency_list)
 
     def process_user(self, user, target):
         for post in user.posts:
-            if post.hasTopic(target):
+            if post.hasKeyword(target):
                 self.result.append(post)
+
+        return self.result
+
+
+class bfs_active(BFS_Template):
+    def __init__(self, users, adjacency_list):
+        # key: user id, value: in degree + out degree of the user
+        self.result = Dictionary()
+        super().__init__(users, adjacency_list)
+
+    def process_user(self, user, target):
+        self.result[user.id] = len(user.followers) + len(user.following)
 
         return self.result
