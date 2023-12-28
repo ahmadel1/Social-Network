@@ -87,17 +87,17 @@ def get_conflicts(file):
 
                 msg_box = QMessageBox()
                 msg_box.setText("Choose a variable")
-                msg_box.addButton(tag, QMessageBox.ButtonRole.YesRole)
-                msg_box.addButton(next_tag, QMessageBox.ButtonRole.NoRole)
-                result = msg_box.exec()
-                choose="None"
-                if result == QMessageBox.ButtonRole.YesRole:
-                    print("User chose Tag")
-                    choose =tag
-                elif result == QMessageBox.ButtonRole.NoRole:
-                    print("User chose Next Tag")
-                    choose=next_tag
+                yes_button = msg_box.addButton(tag, QMessageBox.ButtonRole.YesRole)
+                no_button = msg_box.addButton(next_tag, QMessageBox.ButtonRole.NoRole)
+                msg_box.exec()
+                choose = "None"
 
+                if msg_box.clickedButton() == yes_button:
+                    print("User chose Tag")
+                    choose = tag
+                elif msg_box.clickedButton() == no_button:
+                    print("User chose Next Tag")
+                    choose = next_tag
                 conflict_fixes.append(choose)
         else:
             ind = file_content.index(tag)
