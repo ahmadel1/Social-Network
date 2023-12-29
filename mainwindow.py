@@ -1,7 +1,7 @@
 import sys
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu, QWidget, QTabWidget, QPushButton, QPlainTextEdit, QInputDialog, QMessageBox
-from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction
-from PySide6.QtCore import QSize,QThread
+from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction,QTextCharFormat, QFont
+from PySide6.QtCore import QSize,QThread,Qt
 from ui_form import Ui_MainWindow
 from src import xml_methods
 from src.graph_utilities import graph
@@ -21,6 +21,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.setMinimumSize(1000, 700)
+        self.setWindowTitle("DS Project")
 
         # Set up resizable layout
         self.setup_resizable_layout()
@@ -154,8 +155,8 @@ class MainWindow(QMainWindow):
         self.tab_widget = QTabWidget()
 
         # Add tabs to the QTabWidget
-        self.tab_widget.addTab(widget1, "part 1")
-        self.tab_widget.addTab(Widget2, "part 2")
+        self.tab_widget.addTab(widget1, "Part 1")
+        self.tab_widget.addTab(Widget2, "Part 2")
 
         # Set the central widget to be the QTabWidget
         self.setCentralWidget(self.tab_widget)
@@ -187,6 +188,7 @@ class MainWindow(QMainWindow):
             posts += f"post {i}: {post.getBody()}\n\n"
             i += 1
         self.plaintext.setPlainText(posts)
+
         print("post")
         
 
@@ -202,15 +204,63 @@ class MainWindow(QMainWindow):
         xml_content = self.ui.plainTextEdit.toPlainText()
         network = graph.make_network(xml_content)
         most_active = network.get_most_active()
-        self.plaintext.setPlainText(f"Most active user: {most_active}")
+                # Set the entire content of QPlainTextEdit with formatted text
+        formatted_text = f"Most influencer user:                                                                        {most_active}"
+        self.colorize(formatted_text,"cyan",26)
+
         print("active")
-    
+    def colorize(self,formatted_text,color,space):
+        self.plaintext.setPlainText(formatted_text)
+
+        # Get the text cursor and apply additional formatting
+        cursor = self.plaintext.textCursor()
+
+        # Create a QTextCharFormat and set the text color to blue
+        char_format = QTextCharFormat()
+        char_format.setForeground(QColor(color))
+        char_format.setFontPointSize(20)
+        char_format.setFontFamily("Comic Sans MS")
+
+        # Apply the format to the entire content
+        cursor.setPosition(space)  # Move the cursor to the beginning
+        cursor.movePosition(QTextCursor.MoveOperation.End, QTextCursor.MoveMode.KeepAnchor)  # Select the entire content
+        cursor.mergeCharFormat(char_format)
+
+        cursor.setBlockCharFormat(char_format)
+
+        cursor.setPosition(0)# Move the cursor to the beginning
+        cursor.movePosition(QTextCursor.MoveOperation.End, QTextCursor.MoveMode.KeepAnchor)  # Select the entire content
+
+
+       # Ensure the cursor is at the end after applying formatting
+        cursor.clearSelection()
+        cursor.movePosition(QTextCursor.MoveOperation.End)
+        self.plaintext.setTextCursor(cursor)
+
+        # To reset the font properties to their default values
+        default_format = QTextCharFormat()
+        self.plaintext.setCurrentCharFormat(default_format)
+    def center_text_in_plaintext(self):
+        # Center the text in QPlainTextEdit
+        cursor = self.plaintext.textCursor()
+        cursor.movePosition(QTextCursor.Start, QTextCursor.MoveAnchor)
+        self.plaintext.setTextCursor(cursor)
+
+        block_format = QTextBlockFormat()
+        block_format.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        cursor.mergeBlockFormat(block_format)
+        
+        self.plaintext.setTextCursor(cursor)
+        self.plaintext.setCenterOnScroll(True)
     def on_influncer_click(self):
         xml_content = self.check_xml_for_graph()
         network = graph.make_network(xml_content)
         most_influencer = network.get_most_influencer()
-        self.plaintext.setPlainText(f"Most influencer user: {most_influencer}")
-        print("influncer")
+
+        # Set the entire content of QPlainTextEdit with formatted text
+        formatted_text = f"Most influencer user:                                                                        {most_influencer}"
+        self.colorize(formatted_text,"dark_brown_color",27)
+
     
     # need to be fixed from backend
     def on_following_click(self):
@@ -244,6 +294,7 @@ class MainWindow(QMainWindow):
         
         mutuals = network.get_mutuals(str(self.id), str(self.id2))
         self.plaintext.setPlainText(f"Mutual followers for users {self.id} and {self.id2}: {mutuals}")
+        self.center_text_in_plaintext()
         print("mutual")
 
 

@@ -3,6 +3,7 @@ import re
 from PySide6.QtCore import QTimer
 from ui_form import Ui_MainWindow
 from PyQt6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtGui import QIcon
 def binary_search(num,list:list,s,e):
     mid = int((s+e)/2)
     if(list[mid] == num):
@@ -86,6 +87,7 @@ def get_conflicts(file):
 
 
                 msg_box = QMessageBox()
+                msg_box.setWindowTitle("Conflict Resolve")
                 msg_box.setText("Choose a variable")
                 yes_button = msg_box.addButton(tag, QMessageBox.ButtonRole.YesRole)
                 no_button = msg_box.addButton(next_tag, QMessageBox.ButtonRole.NoRole)

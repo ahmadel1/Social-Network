@@ -135,16 +135,16 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.undo.setText(QCoreApplication.translate("MainWindow", u"undo", None))
-        self.save.setText(QCoreApplication.translate("MainWindow", u"save", None))
-        self.redo.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
-        self.importButton.setText(QCoreApplication.translate("MainWindow", u"  import", None))
-        self.beautify.setText(QCoreApplication.translate("MainWindow", u"  beautify", None))
-        self.json.setText(QCoreApplication.translate("MainWindow", u"  json", None))
-        self.fix.setText(QCoreApplication.translate("MainWindow", u"  fix", None))
-        self.compress.setText(QCoreApplication.translate("MainWindow", u"compress", None))
-        self.decompress.setText(QCoreApplication.translate("MainWindow", u"decmop    ", None))
-        self.minify.setText(QCoreApplication.translate("MainWindow", u"minify", None))
-        self.check.setText(QCoreApplication.translate("MainWindow", u"check", None))
+        self.undo.setText(QCoreApplication.translate("MainWindow", u"Undo", None))
+        self.save.setText(QCoreApplication.translate("MainWindow", u"Save", None))
+        self.redo.setText(QCoreApplication.translate("MainWindow", u"Redo", None))
+        self.importButton.setText(QCoreApplication.translate("MainWindow", u" Import", None))
+        self.beautify.setText(QCoreApplication.translate("MainWindow", u"   Beautify", None))
+        self.json.setText(QCoreApplication.translate("MainWindow", u" Json", None))
+        self.fix.setText(QCoreApplication.translate("MainWindow", u" Fix", None))
+        self.compress.setText(QCoreApplication.translate("MainWindow", u" Compress", None))
+        self.decompress.setText(QCoreApplication.translate("MainWindow", u" Decompress", None))
+        self.minify.setText(QCoreApplication.translate("MainWindow", u" Minify", None))
+        self.check.setText(QCoreApplication.translate("MainWindow", u" Check", None))
     # retranslateUi
 
