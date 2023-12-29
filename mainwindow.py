@@ -205,8 +205,8 @@ class MainWindow(QMainWindow):
         network = graph.make_network(xml_content)
         most_active = network.get_most_active()
                 # Set the entire content of QPlainTextEdit with formatted text
-        formatted_text = f"Most influencer user:                                                                        {most_active}"
-        self.colorize(formatted_text,"cyan",26)
+        formatted_text = f"{('Most influencer user:').center(300)}\n {most_active.getName().center(200)}"
+        self.colorize(formatted_text,"cyan",200)
 
         print("active")
     def colorize(self,formatted_text,color,space):
@@ -258,8 +258,8 @@ class MainWindow(QMainWindow):
         most_influencer = network.get_most_influencer()
 
         # Set the entire content of QPlainTextEdit with formatted text
-        formatted_text = f"Most influencer user:                                                                        {most_influencer}"
-        self.colorize(formatted_text,"dark_brown_color",27)
+        formatted_text = f"{('Most influencer user:').center(300)}\n{most_influencer.getName().center(200)}"
+        self.colorize(formatted_text,"dark_brown_color",200)
 
     
     # need to be fixed from backend
