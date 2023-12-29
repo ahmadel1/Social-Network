@@ -121,7 +121,7 @@ class MainWindow(QMainWindow):
         Active.clicked.connect(self.on_Active_click)
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
-        following=QPushButton("Following")
+        following=QPushButton("Suggestions")
         following.setIconSize(QSize(64,64))
         following.setIcon(QIcon("icons/icons8-follow-64.png"))
         layout.addWidget(following)
@@ -264,13 +264,18 @@ class MainWindow(QMainWindow):
     
     # need to be fixed from backend
     def on_following_click(self):
-        # xml_content = self.check_xml_for_graph()
-        # network = graph.make_network(xml_content)
-        # self.id, ok_pressed = QInputDialog.getInt(self, 'Input ID 1', 'Enter the ID:')
-        # suggestions = network.get_suggestions(self.id)
-        # self.plaintext.setPlainText(f"Following suggestions for user {self.id}: {suggestions}")
-        # if ok_pressed:
-        #     print(f"User input: {self.id}")
+        xml_content = self.check_xml_for_graph()
+        network = graph.make_network(xml_content)
+        self.id, ok_pressed = QInputDialog.getInt(self, 'Input ID 1', 'Enter the ID:')
+        suggestions = network.get_suggestions()
+        suggestions = suggestions[str(self.id)]
+        for i in range(len(suggestions)):
+            suggestions[i] = suggestions[i].getName() + " " + suggestions[i].getId()
+        suggestions = "\n".join(suggestions)
+
+        self.plaintext.setPlainText(f"Following suggestions for user {self.id}:\n{suggestions}")
+        if ok_pressed:
+            print(f"User input: {self.id}")
         
         print("following")
 
@@ -293,7 +298,10 @@ class MainWindow(QMainWindow):
             return
         
         mutuals = network.get_mutuals(str(self.id), str(self.id2))
-        self.plaintext.setPlainText(f"Mutual followers for users {self.id} and {self.id2}: {mutuals}")
+        for i in range(len(mutuals)):
+            mutuals[i] = "Name: " + mutuals[i].getName() + " ID: " + mutuals[i].getId()
+        mutuals = "\n".join(mutuals)
+        self.plaintext.setPlainText(f"Mutual followers for users {self.id} and {self.id2}:\n{mutuals}")
         self.center_text_in_plaintext()
         print("mutual")
 

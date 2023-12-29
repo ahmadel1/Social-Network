@@ -34,8 +34,12 @@ def seperate(file):
         lines = list(filter(lambda x:x != "",lines))
         return lines
 
-def beautify(xml_content):
-    lines = seperate(xml_content)
+def beautify(xml_content, lines = False):
+    if not lines:
+        lines = seperate(xml_content)
+    else:
+        lines = lines
+
     beautified_content = ""
     skip_loops, indentations = 0, ""
     
@@ -81,14 +85,13 @@ def get_conflicts(file):
                 file_content = "".join(file_content)
             else:
                 ind = file_content.index(tag)
-                print("Conflict between tags at line:",binary_search(ind,end_lines,0,len(end_lines)-1)+2)
+                print(f"Conflict between tags at line: {binary_search(ind,end_lines,0,len(end_lines)-1)+2}")
                 print(tag,next_tag)
                 print("Choose One:")
-
-
                 msg_box = QMessageBox()
                 msg_box.setWindowTitle("Conflict Resolve")
-                msg_box.setText("Choose a variable")
+                msg_box.setText(f"Conflict between tags at line: {binary_search(ind,end_lines,0,len(end_lines)-1)+2}\nChoose a variable")
+                
                 yes_button = msg_box.addButton(tag, QMessageBox.ButtonRole.YesRole)
                 no_button = msg_box.addButton(next_tag, QMessageBox.ButtonRole.NoRole)
                 msg_box.exec()
@@ -96,10 +99,10 @@ def get_conflicts(file):
 
                 if msg_box.clickedButton() == yes_button:
                     print("User chose Tag")
-                    choose = tag
+                    choose = tag[1:-1]
                 elif msg_box.clickedButton() == no_button:
                     print("User chose Next Tag")
-                    choose = next_tag
+                    choose = next_tag[1:-1]
                 conflict_fixes.append(choose)
         else:
             ind = file_content.index(tag)
@@ -164,8 +167,7 @@ def fix(xml_content):
     elif(len(stack) == 0):
         print("All good")
 
-    xml_content = "\n".join(lines)
-    return beautify(xml_content)
+    return beautify("",lines)
 
 #<<<<<<< HEAD
 #if __name__ == "__main__":
