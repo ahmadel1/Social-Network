@@ -1,7 +1,9 @@
 from collections import *
 import re
 from PySide6.QtCore import QTimer
-import mainwindow
+from ui_form import Ui_MainWindow
+from PyQt6.QtWidgets import QApplication, QMessageBox
+from PySide6.QtGui import QIcon
 
 def binary_search(num,list:list,s,e):
     mid = int((s+e)/2)
@@ -33,8 +35,13 @@ def seperate(file):
         lines = list(filter(lambda x:x != "",lines))
         return lines
 
-def beautify(xml_content):
-    lines = seperate(xml_content)
+def beautify(xml_content, lines = False):
+    if not lines:
+        lines = seperate(xml_content)
+    else:
+        lines = lines
+
+
     beautified_content = ""
     skip_loops, indentations = 0, ""
     
@@ -63,7 +70,6 @@ def beautify(xml_content):
     return beautified_content
 
 
-
 def some_function_that_needs_delay(time):
             # Start the timer with a delay of 2000 milliseconds (2 seconds)
     QTimer.singleShot(time,delayed_code)
@@ -87,12 +93,25 @@ def get_conflicts(file):
                 file_content = "".join(file_content)
             else:
                 ind = file_content.index(tag)
-                print("Conflict between tags at line:",binary_search(ind,end_lines,0,len(end_lines)-1)+2)
+                print(f"Conflict between tags at line: {binary_search(ind,end_lines,0,len(end_lines)-1)+2}")
                 print(tag,next_tag)
                 print("Choose One:")
-                some_function_that_needs_delay(3000)
-                #choose = mainwindow.MainWindow..ui.lineEdit_2.text()
-                choose=tag
+                msg_box = QMessageBox()
+                msg_box.setWindowTitle("Conflict Resolve")
+                msg_box.setText(f"Conflict between tags at line: {binary_search(ind,end_lines,0,len(end_lines)-1)+2}\nChoose a variable")
+                
+                yes_button = msg_box.addButton(tag, QMessageBox.ButtonRole.YesRole)
+                no_button = msg_box.addButton(next_tag, QMessageBox.ButtonRole.NoRole)
+                msg_box.exec()
+                choose = "None"
+
+                if msg_box.clickedButton() == yes_button:
+                    print("User chose Tag")
+                    choose = tag[1:-1]
+                elif msg_box.clickedButton() == no_button:
+                    print("User chose Next Tag")
+                    choose = next_tag[1:-1]
+
                 conflict_fixes.append(choose)
         else:
             ind = file_content.index(tag)
@@ -157,13 +176,5 @@ def fix(xml_content):
     elif(len(stack) == 0):
         print("All good")
 
-    
+    return beautify("",lines)
 
-    return beautify(xml_content)
-
-#<<<<<<< HEAD
-#if __name__ == "__main__":
-    #fix('src/xml_utilities/Sample files/sample.xml', '') 
-    #beautify('src/xml_utilities/Sample files/sample.xml', '')
-#=======
-#>>>>>>> origin/main

@@ -150,21 +150,15 @@ def convert_xml_to_json(xml_content):
     json_string = create_json_string(xml_string)
     return json_string
 
-def get_users_array_from_path(xml_path):
-    with open(xml_path, "r") as xml_file:
-        xml_string = xml_file.read()
-    json_dict = xml_to_json(create_tree(xml_string).root)
-    return get_users_array(json_dict)
 
-## temp method modified later
+
+
 def get_xml_string_fromPath(file_path):
     with open(file_path, "r") as xml_file:
         xml_string = xml_file.read()
     xml_file.close()
     # remove all the new lines, tabs and spaces from the xml string
     return xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
-
-
 ### test ###
 
 # xml_string = get_xml_string_fromPath("src/xml_utilities/Sample files/sample.xml")

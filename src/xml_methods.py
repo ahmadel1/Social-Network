@@ -29,21 +29,28 @@ def fix_xml(input_path, output_path):
 
 def compress_xml(input_path, output_path):
     try:
-        compress(input_path, output_path)
-        print(f"Compression successful. Compressed XML written to {output_path}")
+        return compress(input_path, output_path)
+        print(f"Compression successful.")
     except Exception as e:
         print(f"Error compressing XML: {e}")
 
 def decompress_xml(input_path, output_path):
     try:
-        decompress(input_path, output_path)
-        print(f"Decompression successful. Decompressed XML written to {output_path}")
+        return decompress(input_path, output_path)
+        print(f"Decompression successful.")
     except Exception as e:
         print(f"Error decompressing XML: {e}")
 
-def check_xml(input_path, output_path):
-    pass
+def check_xml(xml_content):
+    try:
+        print(f"Checking successful.")
+        return check_for_errors(xml_content)
+    except Exception as e:
+        print(f"Error checking XML: {e}")
 
 def minify_xml(xml_content):
-    return minify(xml_content)
-
+    try:
+        print(f"Minification successful.")
+        return minify(xml_content)
+    except Exception as e:
+        print(f"Error minifying XML: {e}")

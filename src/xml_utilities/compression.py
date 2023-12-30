@@ -11,9 +11,9 @@ TERMINAL = True
 def get_file_size(file_path):
     file_size_bytes = os.path.getsize(file_path)
     file_size_kb = file_size_bytes / 1024
-    file_size_mb = file_size_kb / 1024
-    if TERMINAL:
-        print(f"File Size: {file_size_bytes} bytes ({file_size_kb:.2f} KB or {file_size_mb:.2f} MB)")
+    file_size_mb = file_size_kb / 1024  
+    return f"File Size: {file_size_bytes} bytes, ({file_size_kb:.2f}) KB"
+
 
 def compress(input_file, output_file):
     with open(input_file, 'r') as f:
@@ -41,8 +41,10 @@ def compress(input_file, output_file):
     with open(output_file, 'wb') as f:
         pickle.dump((compressed_data, max_code_size), f)
 
-    get_file_size(input_file)
-    get_file_size(output_file)
+    output_message = f"input size: {get_file_size(input_file)}\n output size: {get_file_size(output_file)}"
+    return output_message
+    
+
 
 def decompress(input_file, output_file):
     with open(input_file, 'rb') as f:
@@ -73,9 +75,7 @@ def decompress(input_file, output_file):
     with open(output_file, 'w') as f:
         f.write(decompressed_data)
 
-    get_file_size(input_file)
-    get_file_size(output_file)
+    output_message = f"input size: {get_file_size(input_file)} bytes\n output size: {get_file_size(output_file)} bytes"
+    return output_message
 
-if __name__ == "__main__":
-    compress(input_file, output_file)
-    decompress(output_file, decompressed_file)
+
