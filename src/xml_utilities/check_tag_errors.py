@@ -38,3 +38,4 @@ def check_for_errors(xml_content):
         for tag in re.findall("<[0-9A-Za-z#]*>",line):
             errors.append(c+1)
     return errors
+

@@ -54,5 +54,3 @@ def minify_xml(xml_content):
         return minify(xml_content)
     except Exception as e:
         print(f"Error minifying XML: {e}")
-
-

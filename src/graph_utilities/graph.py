@@ -69,13 +69,6 @@ class Graph:
         plt.show()
 
 
-def make_network(xml_string):
-    xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()
-    network = Graph(xml_string)
-    return network
-
-
-
 
 def make_network(xml_string):
     xml_string = xml_string.replace("\n", "").replace("\t", "").replace("  ", "").strip()

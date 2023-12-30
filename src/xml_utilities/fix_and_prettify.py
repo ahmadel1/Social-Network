@@ -4,6 +4,7 @@ from PySide6.QtCore import QTimer
 from ui_form import Ui_MainWindow
 from PyQt6.QtWidgets import QApplication, QMessageBox
 from PySide6.QtGui import QIcon
+
 def binary_search(num,list:list,s,e):
     mid = int((s+e)/2)
     if(list[mid] == num):
@@ -40,6 +41,7 @@ def beautify(xml_content, lines = False):
     else:
         lines = lines
 
+
     beautified_content = ""
     skip_loops, indentations = 0, ""
     
@@ -68,7 +70,13 @@ def beautify(xml_content, lines = False):
     return beautified_content
 
 
+def some_function_that_needs_delay(time):
+            # Start the timer with a delay of 2000 milliseconds (2 seconds)
+    QTimer.singleShot(time,delayed_code)
 
+def delayed_code():
+            # This function will be called after the specified delay
+    print("Delayed code executed")
 def get_conflicts(file):
     file_content = file.replace(" ","")
     end_lines = [i for i in range(len(file_content)) if file_content[i] == "\n"]
@@ -103,6 +111,7 @@ def get_conflicts(file):
                 elif msg_box.clickedButton() == no_button:
                     print("User chose Next Tag")
                     choose = next_tag[1:-1]
+
                 conflict_fixes.append(choose)
         else:
             ind = file_content.index(tag)
@@ -169,9 +178,3 @@ def fix(xml_content):
 
     return beautify("",lines)
 
-#<<<<<<< HEAD
-#if __name__ == "__main__":
-    #fix('src/xml_utilities/Sample files/sample.xml', '') 
-    #beautify('src/xml_utilities/Sample files/sample.xml', '')
-#=======
-#>>>>>>> origin/main

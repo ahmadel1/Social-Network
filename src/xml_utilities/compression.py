@@ -6,12 +6,14 @@ input_file = f"{project_directory}/Sample files/sample.xml"
 output_file = f"{project_directory}/Sample files/sample-compressed-lzw.pkl"
 decompressed_file = f"{project_directory}/Sample files/sample-decompressed-lzw.xml"
 
+TERMINAL = True  
 
 def get_file_size(file_path):
     file_size_bytes = os.path.getsize(file_path)
     file_size_kb = file_size_bytes / 1024
     file_size_mb = file_size_kb / 1024  
     return f"File Size: {file_size_bytes} bytes, ({file_size_kb:.2f}) KB"
+
 
 def compress(input_file, output_file):
     with open(input_file, 'r') as f:
@@ -42,6 +44,7 @@ def compress(input_file, output_file):
     output_message = f"input size: {get_file_size(input_file)}\n output size: {get_file_size(output_file)}"
     return output_message
     
+
 
 def decompress(input_file, output_file):
     with open(input_file, 'rb') as f:
@@ -74,4 +77,5 @@ def decompress(input_file, output_file):
 
     output_message = f"input size: {get_file_size(input_file)} bytes\n output size: {get_file_size(output_file)} bytes"
     return output_message
+
 
