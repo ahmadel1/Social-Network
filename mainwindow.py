@@ -1,19 +1,32 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu, QWidget, QTabWidget, QPushButton, QPlainTextEdit, QInputDialog, QMessageBox
-from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction,QTextCharFormat, QFont
+from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QDialog, QLabel,  QTextEdit, QLineEdit, QVBoxLayout, QSpacerItem, QSizePolicy, QHBoxLayout, QComboBox, QMenu, QWidget, QTabWidget, QPushButton, QPlainTextEdit, QInputDialog, QMessageBox
+from PySide6.QtGui import QIcon, QTextCursor, QColor, QTextBlockFormat, QAction,QTextCharFormat, QFont, QPixmap
 from PySide6.QtCore import QSize,QThread,Qt
 from ui_form import Ui_MainWindow
 from src import xml_methods
 from src.graph_utilities import graph
 
 
-#class OutputCapture:
-    #def __init__(self, line_edit):
-       # self.line_edit = line_edit
+# for showing graph
+class GraphDialog(QDialog):
+    def __init__(self, pixmap, image_path, parent=None):
+        super(GraphDialog, self).__init__(parent)
+        self.image_path = image_path
 
-   # def write(self, text):
-        # Append new text and a newline character to the existing content
-        #self.line_edit.setText(self.line_edit.text() + text + '\n')
+        layout = QVBoxLayout(self)
+        label = QLabel(self)
+        label.setPixmap(pixmap)
+        layout.addWidget(label)
+
+        self.finished.connect(self.cleanup)
+    # delete image file after closing the dialog
+    def cleanup(self):
+        if self.image_path:
+            try:
+                import os
+                os.remove(self.image_path)
+            except Exception as e:
+                print(f"Error deleting image file: {e}")
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -29,6 +42,8 @@ class MainWindow(QMainWindow):
         self.id2=-200
         self.flag=True
 
+        
+
         # Set up output capture
         # self.output_capture = OutputCapture(self.ui.lineEdit)
         #sys.stdout = self.output_capture
@@ -41,7 +56,9 @@ class MainWindow(QMainWindow):
         self.redo_stack = []
         # push any change in output to undo stack
         self.ui.plainTextEdit_2.textChanged.connect(self.push_to_undo_stack)
-        
+        font = QFont()
+        font.setPointSize(18)  # Change 16 to the desired font size
+        self.plaintext.setFont(font)      
 
     def push_to_undo_stack(self):
         if self.ui.plainTextEdit_2.toPlainText() != self.undo_stack[-1]:
@@ -125,7 +142,7 @@ class MainWindow(QMainWindow):
         following.setIconSize(QSize(64,64))
         following.setIcon(QIcon("icons/icons8-follow-64.png"))
         layout.addWidget(following)
-        following.clicked.connect(self.on_following_click)
+        following.clicked.connect(self.on_suggestions_click)
         layout.addSpacerItem(QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum))
 
         mutual=QPushButton("Mutual Followers")
@@ -176,18 +193,18 @@ class MainWindow(QMainWindow):
     def on_post_click(self):
         xml_content = self.check_xml_for_graph()
         network = graph.make_network(xml_content)
-        post_genre, ok_pressed = QInputDialog.getText(self, 'Post Search', 'Enter Search Term')
+        search_term, ok_pressed = QInputDialog.getText(self, 'Post Search', 'Enter Search Term')
         if ok_pressed:
-            print(f"User input: {post_genre}")
+            print(f"User input: {search_term}")
         else: 
             return
-        found_posts = network.search_posts(post_genre)
+        found_posts = network.search_posts(search_term)
         posts = ""
         i = 0
         for post in found_posts:
             posts += f"post {i}: {post.getBody()}\n\n"
             i += 1
-        self.plaintext.setPlainText(posts)
+        self.plaintext.setPlainText(f"Number of Posts found containing word {search_term} is {len(found_posts)}\n" + posts)
 
         print("post")
         
@@ -196,81 +213,42 @@ class MainWindow(QMainWindow):
     def on_Graph_click(self):
         xml_content = self.check_xml_for_graph()
         network = graph.make_network(xml_content)
-        network.draw_network()
+        path = network.draw_network()
+        pixmap = QPixmap(path)
+        graph_dialog = GraphDialog(pixmap, path, self)
+        graph_dialog.setWindowTitle("Graph Image")
+        graph_dialog.exec()
         print("graph")
+
     
     def on_Active_click(self):
         xml_content = self.check_xml_for_graph()
         xml_content = self.ui.plainTextEdit.toPlainText()
         network = graph.make_network(xml_content)
         most_active = network.get_most_active()
-                # Set the entire content of QPlainTextEdit with formatted text
-        formatted_text = f"{('Most influencer user:').center(300)}\n {most_active.getName().center(200)}"
-        self.colorize(formatted_text,"cyan",200)
-
+        message = f"Most Active user:\nName: {most_active.getName()}, ID: {most_active.getId()}\nFollowers: {len(most_active.getFollowers())}"
+        self.plaintext.setPlainText(message)
         print("active")
-    def colorize(self,formatted_text,color,space):
-        self.plaintext.setPlainText(formatted_text)
 
-        # Get the text cursor and apply additional formatting
-        cursor = self.plaintext.textCursor()
-
-        # Create a QTextCharFormat and set the text color to blue
-        char_format = QTextCharFormat()
-        char_format.setForeground(QColor(color))
-        char_format.setFontPointSize(20)
-        char_format.setFontFamily("Comic Sans MS")
-
-        # Apply the format to the entire content
-        cursor.setPosition(space)  # Move the cursor to the beginning
-        cursor.movePosition(QTextCursor.MoveOperation.End, QTextCursor.MoveMode.KeepAnchor)  # Select the entire content
-        cursor.mergeCharFormat(char_format)
-
-        cursor.setBlockCharFormat(char_format)
-
-        cursor.setPosition(0)# Move the cursor to the beginning
-        cursor.movePosition(QTextCursor.MoveOperation.End, QTextCursor.MoveMode.KeepAnchor)  # Select the entire content
-
-
-       # Ensure the cursor is at the end after applying formatting
-        cursor.clearSelection()
-        cursor.movePosition(QTextCursor.MoveOperation.End)
-        self.plaintext.setTextCursor(cursor)
-
-        # To reset the font properties to their default values
-        default_format = QTextCharFormat()
-        self.plaintext.setCurrentCharFormat(default_format)
-    def center_text_in_plaintext(self):
-        # Center the text in QPlainTextEdit
-        cursor = self.plaintext.textCursor()
-        cursor.movePosition(QTextCursor.Start, QTextCursor.MoveAnchor)
-        self.plaintext.setTextCursor(cursor)
-
-        block_format = QTextBlockFormat()
-        block_format.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        cursor.mergeBlockFormat(block_format)
-        
-        self.plaintext.setTextCursor(cursor)
-        self.plaintext.setCenterOnScroll(True)
+    
     def on_influncer_click(self):
         xml_content = self.check_xml_for_graph()
         network = graph.make_network(xml_content)
         most_influencer = network.get_most_influencer()
-
-        # Set the entire content of QPlainTextEdit with formatted text
-        formatted_text = f"{('Most influencer user:').center(300)}\n{most_influencer.getName().center(200)}"
-        self.colorize(formatted_text,"dark_brown_color",200)
+        message = f"Most Influencer user:\nName: {most_influencer.getName()}, ID: {most_influencer.getId()}\nFollowers: {len(most_influencer.getFollowers())}"
+        self.plaintext.setPlainText(message)
+        print("influencer")
 
     
     # need to be fixed from backend
-    def on_following_click(self):
+    def on_suggestions_click(self):
         xml_content = self.check_xml_for_graph()
         network = graph.make_network(xml_content)
         self.id, ok_pressed = QInputDialog.getInt(self, 'Input ID 1', 'Enter the ID:')
         suggestions = network.get_suggestions()
         suggestions = suggestions[str(self.id)]
         for i in range(len(suggestions)):
-            suggestions[i] = suggestions[i].getName() + " " + suggestions[i].getId()
+            suggestions[i] = "Name: " + suggestions[i].getName() + " " + ", ID: " + suggestions[i].getId()
         suggestions = "\n".join(suggestions)
 
         self.plaintext.setPlainText(f"Following suggestions for user {self.id}:\n{suggestions}")
@@ -299,13 +277,10 @@ class MainWindow(QMainWindow):
         
         mutuals = network.get_mutuals(str(self.id), str(self.id2))
         for i in range(len(mutuals)):
-            mutuals[i] = "Name: " + mutuals[i].getName() + " ID: " + mutuals[i].getId()
+            mutuals[i] = "Name: " + mutuals[i].getName() + ", ID: " + mutuals[i].getId()
         mutuals = "\n".join(mutuals)
         self.plaintext.setPlainText(f"Mutual followers for users {self.id} and {self.id2}:\n{mutuals}")
-        self.center_text_in_plaintext()
         print("mutual")
-
-
 
 
     def setup_icons(self):
