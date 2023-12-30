@@ -50,6 +50,7 @@ class Graph:
         post_searcher = bfs_posts(self.users, self.adjacency_list)
         return post_searcher.get_result(topic)
     
+
     def draw_network(self):
         G = nx.DiGraph()
         for user_id, followers in self.adjacency_list.items():
@@ -62,11 +63,15 @@ class Graph:
 
         nx.draw(G, rotated_pos, with_labels=False, node_size=700, node_color='skyblue', font_size=15, edge_color='gray', arrowsize=20,
                 connectionstyle="arc3,rad=0.1")
-
+        
         labels = {node: str(node) for node in G.nodes}
         nx.draw_networkx_labels(G, rotated_pos, labels, font_color='black', font_size=15, verticalalignment="center", horizontalalignment="center")
+        save_path = "tmp.png"
+        plt.savefig(save_path)
+        plt.close()
 
-        plt.show()
+        return save_path
+
 
 
 
