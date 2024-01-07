@@ -107,10 +107,16 @@ def get_conflicts(file):
 
                 if msg_box.clickedButton() == yes_button:
                     print("User chose Tag")
-                    choose = tag[1:-1]
+                    if tag[1] == "/":
+                        choose = tag[2:-1]
+                    else:
+                        choose = tag[1:-1]
                 elif msg_box.clickedButton() == no_button:
                     print("User chose Next Tag")
-                    choose = next_tag[1:-1]
+                    if next_tag[1] == "/":
+                        choose = next_tag[2:-1]
+                    else:
+                        choose = next_tag[1:-1]
 
                 conflict_fixes.append(choose)
         else:
